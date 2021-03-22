@@ -7,13 +7,14 @@ class Estado():
         self.idEstado=1
         self.transiciones=set()
         self.aceptacion=False
+        self.token=-1
 
     def setId(self,id):
         self.idEstado=id
 
     def setAceptacion(self,acept):
         self.aceptacion=acept
-    
+        
     def setTransicion(self,trans):
         self.transiciones.add(trans)
     

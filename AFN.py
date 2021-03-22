@@ -23,7 +23,7 @@ class AFN():
         self.incremento+=1
         e2.setId(self.incremento)
         t=Transicion()
-        t.setParametros(e1,e2,simbolo)
+        t.setParametros(simbolo,simbolo,e2)
         e2.setAceptacion(True)
         e1.setTransicion(t)
         self.EdoIni=e1
@@ -36,17 +36,22 @@ class AFN():
         e1=Estado()
         e2=Estado()
         t1=Transicion()
-        t1.setParametros(e1,self.getEdoInicial(),EPSILON)
+        t1.setEpsilon(EPSILON,self.getEdoInicial())
         e1.setTransicion(t1)
-        t1.setParametros(e1,f.getEdoInicial(),EPSILON)
+        t1.setEpsilon(EPSILON,f.getEdoInicial())
         e1.setTransicion(t1)
         for acept in self.EdosAcept:
-            t1.setParametros(acept,e2,EPSILON)
-            e2.setTransicion(t1)
-
+            t1.setEpsilon(EPSILON,e2)
+            acept.setAceptacion(False)
+            acept.setTransicion(t1)
+            self.setEdosAFN(acept)
+   
         for acept in f.getEdosAcept():
-            t1.setParametros(acept,e2,EPSILON)
-            e2.setTransicion(t1)
+            t1.setEpsilon(EPSILON,e2)
+            acept.setAceptacion(False)
+            acept.setTransicion(t1)
+            f.setEdosAFN(acept)
+
 
         self.limpiar()
         f.limpiar()
@@ -84,8 +89,11 @@ class AFN():
     def setAlfabeto(self,simbolo):
         self.Alfabeto.add(simbolo)
     
-    def setEdosAcept(self,edo):
+    def setEdosAcept(self,edo): #Aniadimos al conjunto un elemento
         self.EdosAcept.add(edo)
+
+    def setEdosAceptCompleto(self,edos): #igualamos dos conjuntos
+        self.EdosAcept=edos
     
     def setEdosAFN(self,edo):
         self.EdosAFN.add(edo)

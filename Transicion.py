@@ -3,11 +3,16 @@
 class Transicion():
 
     def __init__(self): 
-        self.eInferior=None   #Estas dos variables nos marcaran el Estado Superior e Inferior
-        self.eSuperior=None
-        self.simbolo=''
+        self.SInferior=''   
+        self.SSuperior=''
+        self.estado=None
 
-    def setParametros(self,Inf,Sup,simb):
-        self.eInferior=Inf   #Estas dos variables nos marcaran el Estado Superior e Inferior
-        self.eSuperior=Sup
-        self.simbolo=simb
+    def setParametros(self,Inf,Sup,e):
+        self.SInferior=Inf   
+        self.SSuperior=Sup
+        self.estado=e
+
+    def setEpsilon(self,simb,e):
+        self.SInferior=simb  
+        self.SSuperior=simb
+        self.estado=e
