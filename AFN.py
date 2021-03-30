@@ -31,8 +31,7 @@ class AFN():
                 # Si todo es valido entonces
                 simbolo2 = s2
             else:
-                print("Error: No se ha creado ningún AFN porque el simbolo superior es mayor que el inferior")
-                return
+                print("Error: Se creará un AFN con solo el primer simbolo que se dió, porque el simbolo superior es mayor que el inferior")
 
         # Se crea el primer estado con un id>=0
         self.incremento+=1
@@ -117,6 +116,41 @@ class AFN():
         self.EdosAFN = self.EdosAFN | f.EdosAFN
         self.Alfabeto += f.Alfabeto
 
+    def cerradurap(self):
+        """Cerradura positiva de un AFN
+        """
+        # Se crea un nuevo edo inicial y final de aceptación
+        ei = Estado()
+        ef = Estado()
+
+        # Se crean y añaden las transiciones epsilon
+        t = Transicion()
+        t.setEpsilon(EPSILON, self.EdoIni)
+        ei._transiciones.add(t)
+        for e in self.EdosAcept:
+            t = Transicion()
+            t.setEpsilon(EPSILON, ef)
+            e._transiciones.add(t)
+
+            t = Transicion()
+            t.setEpsilon(EPSILON, self.EdoIni)
+            e._transiciones.add(t)
+
+            e.aceptacion = False
+
+        # Se actualizan primero los IDs de self
+        self.actualizarIds(1)
+        # Luego se actualiza ef
+        ef.setId(self.obtenerUltimoIdEstado() + 1)
+        ef.aceptacion = True
+        # Y ya posterior a esto se actualiza la información de self
+        self.EdoIni = ei
+        self.EdosAcept.clear()
+        self.EdosAcept.add(ef)
+        self.EdosAFN.add(ei)
+        self.EdosAFN.add(ef)
+
+
     def actualizarIds(self, n):
         """Actualiza los IDs de los estados de un AFN dado
 
@@ -131,6 +165,19 @@ class AFN():
         # Luego se actualiza con la n, que debe ser el número de estados de un AFN dado
         for e in self.EdosAFN:
             e.setId(e.idEstado + n)
+
+    def obtenerUltimoIdEstado(self):
+        """Obtiene el último ID que se tiene en todo el set de estados de un AFN
+
+        Returns:
+            int: ID del último estado
+        """
+        a = 0
+        for e in self.EdosAFN:
+            if e.idEstado > a:
+                a = e.idEstado
+
+        return a
 
     def __str__(self):
         return "El alfabeto es:"+ str(self.Alfabeto)
@@ -168,24 +215,35 @@ class AFN():
                 print("Edo acept:", e)
             else:
                 print(e)
-        
+
+    def imprimirTransiciones(self):
+        for e in self.EdosAFN:
+            for t in e._transiciones:
+                print(t)
+
 a= AFN()
 a.crearAFNBasico('a', 'd')
 print("a:", a)
 a.imprimirAFN()
-
-b = AFN()
-b.crearAFNBasico('1')
-
-a.concatenar(b)
+a.cerradurap()
 print("a:", a)
 a.imprimirAFN()
+print("-")
+a.imprimirTransiciones()
 
-c = AFN()
-c.crearAFNBasico('g', 'k')
-a.concatenar(c)
-print("a:", a)
-a.imprimirAFN()
+# PRUEBAS PARA CONCATENACION
+# b = AFN()
+# b.crearAFNBasico('1')
+
+# a.concatenar(b)
+# print("a:", a)
+# a.imprimirAFN()
+
+# c = AFN()
+# c.crearAFNBasico('g', 'k')
+# a.concatenar(c)
+# print("a:", a)
+# a.imprimirAFN()
 # print(a)
 # print(b)
 # a.imprimirAFN()
@@ -193,3 +251,4 @@ a.imprimirAFN()
 # a.UnirAFN(b)
 # print("a:",a)
 # a.imprimirAFN()
+
