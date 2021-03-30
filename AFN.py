@@ -14,6 +14,7 @@ class AFN():
         self.Alfabeto = []
         self.idAFN=0
     
+    # OPCIÓN 1
     # AFNBasico para simbolo inferior (o superior)
     def crearAFNBasico(self,simbolo, s2=None):
         """Crea un AFN básico a partir de 1 o 2 símbolos
@@ -58,6 +59,8 @@ class AFN():
         self.setEdosAcept(e2)
         # self.setAlfabeto(simbolo)
 
+    # OPCIÓN 2
+    # Acá hay errores de lógica con la numeración de Estados y la asignación del estado de aceptación
     def UnirAFN(self,f):
         e1=Estado()
         e2=Estado()
@@ -89,10 +92,46 @@ class AFN():
         self.EdosAFN=self.EdosAFN | f.getEdosAFN()
         self.setEdosAFN(e1)
         self.setEdosAFN(e2)
-        self.Alfabeto=self.Alfabeto | f.getAlfabeto()
+        self.Alfabeto = self.Alfabeto + f.getAlfabeto()
         
         return self
     
+    # OPCIÓN 3
+    def concatenar(self, f):
+        """Fusion del estado de aceptación del AFN con el AFN f. Se conserva el estado de aceptación del AFN original
+
+        Args:
+            f (AFN): AFN f con el que será concatenado AFN
+        """
+        for t in f.getEdoInicial()._transiciones:
+            for e in self.getEdosAcept():
+                e._transiciones.add(t)
+                e.aceptacion = False # Los estados de aceptación de self dejan de serlo
+
+        # Se elimina el estado inicial de f
+        f.EdosAFN.remove(f.EdoIni)
+        # Se actualiza el ID de los estados de f con el número de estados que tiene self
+        f.actualizarIds(len(self.EdosAFN))
+        # Se actualiza self
+        self.EdosAcept = f.EdosAcept
+        self.EdosAFN = self.EdosAFN | f.EdosAFN
+        self.Alfabeto += f.Alfabeto
+
+    def actualizarIds(self, n):
+        """Actualiza los IDs de los estados de un AFN dado
+
+        Args:
+            n (int): Es el número al cual se incrementarán todos los IDs de los estados del AFN
+        """
+        # Primero se actualiza a 1,2,3,...
+        i = 1
+        for e in self.EdosAFN:
+            e.setId(i)
+            i+=1
+        # Luego se actualiza con la n, que debe ser el número de estados de un AFN dado
+        for e in self.EdosAFN:
+            e.setId(e.idEstado + n)
+
     def __str__(self):
         return "El alfabeto es:"+ str(self.Alfabeto)
 
@@ -125,13 +164,32 @@ class AFN():
 
     def imprimirAFN(self):
         for e in self.EdosAFN:
-            print(e)
+            if e.aceptacion:
+                print("Edo acept:", e)
+            else:
+                print(e)
         
 a= AFN()
 a.crearAFNBasico('a', 'd')
-# b = AFN()
-# b.crearAFNBasico('z')
-print(a)
-# print(b)
+print("a:", a)
 a.imprimirAFN()
+
+b = AFN()
+b.crearAFNBasico('1')
+
+a.concatenar(b)
+print("a:", a)
+a.imprimirAFN()
+
+c = AFN()
+c.crearAFNBasico('g', 'k')
+a.concatenar(c)
+print("a:", a)
+a.imprimirAFN()
+# print(a)
+# print(b)
+# a.imprimirAFN()
 # b.imprimirAFN()
+# a.UnirAFN(b)
+# print("a:",a)
+# a.imprimirAFN()

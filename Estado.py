@@ -5,29 +5,27 @@ class Estado(object):
     """
     def __init__(self):
         self.idEstado=1
-        self.transiciones=set()
-        self.aceptacion=False
+        self._transiciones=set()
+        self._aceptacion=False
         self.token=-1
 
     def setId(self,id):
         self.idEstado=id
 
     def setAceptacion(self,acept):
-        self.aceptacion=acept
+        self._aceptacion=acept
         
     def setTransicion(self,trans):
-        self.transiciones.add(trans)
+        self._transiciones.add(trans)
     
     def __str__(self):
         return "e" + str(self.idEstado)
 
     # A partir de aqui agregué a la clase pythonic getters & setters
-    # @property
-    # def transiciones(self):
-    #     """Getter de transiciones"""
-    #     return self.transiciones
-    # # @transiciones.setter
-    # def transiciones(self, value):
-    #     """Setter de transiciones"""
-    #     self.transiciones = value
-    
+    @property
+    def aceptacion(self):
+        return self._aceptacion
+
+    @aceptacion.setter
+    def aceptacion(self, value):
+        self._aceptacion = value
