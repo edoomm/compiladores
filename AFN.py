@@ -116,6 +116,7 @@ class AFN():
         self.EdosAFN = self.EdosAFN | f.EdosAFN
         self.Alfabeto += f.Alfabeto
 
+    # OPCIÓN 4
     def cerradurap(self):
         """Cerradura positiva de un AFN
         """
@@ -124,17 +125,10 @@ class AFN():
         ef = Estado()
 
         # Se crean y añaden las transiciones epsilon
-        t = Transicion()
-        t.setEpsilon(EPSILON, self.EdoIni)
-        ei._transiciones.add(t)
+        ei._transiciones.add(Transicion(simb1=EPSILON, edo=ei))
         for e in self.EdosAcept:
-            t = Transicion()
-            t.setEpsilon(EPSILON, ef)
-            e._transiciones.add(t)
-
-            t = Transicion()
-            t.setEpsilon(EPSILON, self.EdoIni)
-            e._transiciones.add(t)
+            e._transiciones.add(Transicion(simb1=EPSILON, edo=ef))
+            e._transiciones.add(Transicion(simb1=EPSILON, edo=self.EdoIni))
 
             e.aceptacion = False
 
@@ -150,6 +144,10 @@ class AFN():
         self.EdosAFN.add(ei)
         self.EdosAFN.add(ef)
 
+    # OCIÓN 5
+    def cerradurak(self):
+        
+        pass
 
     def actualizarIds(self, n):
         """Actualiza los IDs de los estados de un AFN dado
@@ -221,6 +219,13 @@ class AFN():
             for t in e._transiciones:
                 print(t)
 
+# # PRUEBAS PARA CERRADURA KLEEN
+# a= AFN()
+# a.crearAFNBasico('a', 'd')
+# print("a:", a)
+# a.imprimirAFN()
+
+# PRUEBAS PARA CERRADURA POSITIVA
 a= AFN()
 a.crearAFNBasico('a', 'd')
 print("a:", a)
