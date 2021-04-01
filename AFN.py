@@ -144,7 +144,7 @@ class AFN():
         self.EdosAFN.add(ei)
         self.EdosAFN.add(ef)
 
-    # OCIÓN 5
+    # OPCIÓN 5
     def cerradurak(self):
         """Cerradura de Kleen de un AFN
         """
@@ -168,7 +168,35 @@ class AFN():
         # Se actualizan los nuevos estados de inicio y aceptación de self
         self.EdoIni = ei
         ef.aceptacion = True
-        # Se actualizan los estados viejos
+        # Se actualiza AFN
+        self.EdosAcept.clear()
+        self.EdosAcept.add(ef)
+        self.EdosAFN.add(ei)
+        self.EdosAFN.add(ef)
+
+    # OPCIÓN 6
+    def opcional(self):
+        """Operación ? para un AFN
+        """
+        # Se crean nuevos edos inicial y de aceptación
+        ei = Estado()
+        ef = Estado()
+
+        # Se agregan las transiciones del nuevo estado inicial
+        ei._transiciones.add(Transicion(simb1=EPSILON, edo=self.EdoIni))
+        ei._transiciones.add(Transicion(simb1=EPSILON, edo=ef))
+        # Se agregan las transiciones de los edos acept con el nuevo edo acept
+        for e in self.EdosAcept:
+            e._transiciones.add(Transicion(simb1=EPSILON, edo=ef))
+            e.aceptacion = False
+
+        # Actualización de IDs
+        self.actualizarIds(1)
+        ef.setId(self.obtenerUltimoIdEstado() + 1)
+        # Se actualizan nuevos estados
+        self.EdoIni = ei
+        ef.aceptacion = True
+        # Se actualiza AFN
         self.EdosAcept.clear()
         self.EdosAcept.add(ef)
         self.EdosAFN.add(ei)
@@ -244,23 +272,34 @@ class AFN():
             for t in e._transiciones:
                 print(t)
 
-# PRUEBAS PARA CERRADURA KLEEN
+# PRUEBAS PARA OPCIONAL ?
 a = AFN()
-a.crearAFNBasico('a', 'j')
+a.crearAFNBasico('d')
 print("a:", a)
 a.imprimirAFN()
-b = AFN()
-b.crearAFNBasico('2', '3')
-a.concatenar(b)
-print("a:", a)
+a.opcional()
+print("Opcional\na:", a)
 a.imprimirAFN()
-a.imprimirTransiciones()
-a.cerradurak()
-print("Cerradura de Kleen\na:", a)
-a.imprimirAFN()
+print("-")
 a.imprimirTransiciones()
 
-# # PRUEBAS PARA CERRADURA POSITIVA
+# # PRUEBAS PARA CERRADURA KLEEN *
+# a = AFN()
+# a.crearAFNBasico('a', 'j')
+# print("a:", a)
+# a.imprimirAFN()
+# b = AFN()
+# b.crearAFNBasico('2', '3')
+# a.concatenar(b)
+# print("a:", a)
+# a.imprimirAFN()
+# a.imprimirTransiciones()
+# a.cerradurak()
+# print("Cerradura de Kleen\na:", a)
+# a.imprimirAFN()
+# a.imprimirTransiciones()
+
+# # PRUEBAS PARA CERRADURA POSITIVA +
 # a= AFN()
 # a.crearAFNBasico('a', 'd')
 # print("a:", a)
