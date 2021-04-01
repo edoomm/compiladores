@@ -146,8 +146,33 @@ class AFN():
 
     # OCIÓN 5
     def cerradurak(self):
-        
-        pass
+        """Cerradura de Kleen de un AFN
+        """
+        # Se crea un nuevo estado inicial y de aceptación
+        ei = Estado()
+        ef = Estado()
+
+        # Se agregan las transiciones del estado inicial
+        ei._transiciones.add(Transicion(simb1=EPSILON, edo=self.EdoIni))
+        ei._transiciones.add(Transicion(simb1=EPSILON, edo=ef))
+
+        # Se hacen transiciones al nuevo estado de aceptación de los estados de aceptación de self
+        for e in self.EdosAcept:
+            e._transiciones.add(Transicion(simb1=EPSILON, edo=ef))
+            e._transiciones.add(Transicion(simb1=EPSILON, edo=self.EdoIni))
+            e.aceptacion = False
+
+        # Actualización de IDs
+        self.actualizarIds(1)
+        ef.setId(self.obtenerUltimoIdEstado() + 1)
+        # Se actualizan los nuevos estados de inicio y aceptación de self
+        self.EdoIni = ei
+        ef.aceptacion = True
+        # Se actualizan los estados viejos
+        self.EdosAcept.clear()
+        self.EdosAcept.add(ef)
+        self.EdosAFN.add(ei)
+        self.EdosAFN.add(ef)
 
     def actualizarIds(self, n):
         """Actualiza los IDs de los estados de un AFN dado
@@ -219,22 +244,32 @@ class AFN():
             for t in e._transiciones:
                 print(t)
 
-# # PRUEBAS PARA CERRADURA KLEEN
+# PRUEBAS PARA CERRADURA KLEEN
+a = AFN()
+a.crearAFNBasico('a', 'j')
+print("a:", a)
+a.imprimirAFN()
+b = AFN()
+b.crearAFNBasico('2', '3')
+a.concatenar(b)
+print("a:", a)
+a.imprimirAFN()
+a.imprimirTransiciones()
+a.cerradurak()
+print("Cerradura de Kleen\na:", a)
+a.imprimirAFN()
+a.imprimirTransiciones()
+
+# # PRUEBAS PARA CERRADURA POSITIVA
 # a= AFN()
 # a.crearAFNBasico('a', 'd')
 # print("a:", a)
 # a.imprimirAFN()
-
-# PRUEBAS PARA CERRADURA POSITIVA
-a= AFN()
-a.crearAFNBasico('a', 'd')
-print("a:", a)
-a.imprimirAFN()
-a.cerradurap()
-print("a:", a)
-a.imprimirAFN()
-print("-")
-a.imprimirTransiciones()
+# a.cerradurap()
+# print("a:", a)
+# a.imprimirAFN()
+# print("-")
+# a.imprimirTransiciones()
 
 # PRUEBAS PARA CONCATENACION
 # b = AFN()
