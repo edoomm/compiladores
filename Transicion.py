@@ -16,6 +16,7 @@ class Transicion():
         self.SInferior = simb1
         self.SSuperior = simb2
         self.estado = edo
+     
 
     def setParametros(self,Inf,Sup,e):
         self.SInferior=Inf   

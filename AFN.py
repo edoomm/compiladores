@@ -59,38 +59,62 @@ class AFN():
         # self.setAlfabeto(simbolo)
 
     # OPCIÓN 2
-    # Acá hay errores de lógica con la numeración de Estados y la asignación del estado de aceptación
     def UnirAFN(self,f):
+        #Creamos dos conjuntos auxiliares para los EdosAFN
+        conjuntoA=set()
+        conjuntoB=set()
+        #Llenamos los conjuntos auxiliares
+        for c in self.EdosAFN:
+            if c.getAceptacion() != True:
+                conjuntoA.add(c)
+
+        for c in f.getEdosAFN():
+            if c.getAceptacion() != True :
+                conjuntoB.add(c)
+
+        #Creamos Estados inicial=1 y final=2 junto con las transiciones
         e1=Estado()
         e2=Estado()
-
         t1=Transicion()
+        t2=Transicion()
         t1.setEpsilon(EPSILON,self.getEdoInicial())
-
+        t2.setEpsilon(EPSILON,f.getEdoInicial())
         e1.setTransicion(t1)
-        t1.setEpsilon(EPSILON,f.getEdoInicial())
-        e1.setTransicion(t1)
+        e1.setTransicion(t2)
 
+        """Aniadimos la transicion EPSILON a los conjuntos de aceptacion y
+           eliminamos la aceptacion,aniadiendo asi anuestros Estados a los conjuntos aux 
+        """
         for acept in self.EdosAcept:
             t1.setEpsilon(EPSILON,e2)
             acept.setAceptacion(False)
             acept.setTransicion(t1)
-            self.setEdosAFN(acept)
+            conjuntoA.add(acept)
    
         for acept in f.getEdosAcept():
             t1.setEpsilon(EPSILON,e2)
             acept.setAceptacion(False)
             acept.setTransicion(t1)
-            f.setEdosAFN(acept)
+            conjuntoB.add(acept)
 
+        #Limpiamos los estados de aceptacion tanto de self como de f
         self.limpiar()
-        f.limpiar()
+        f.getEdosAcept().clear()
+
+        #e1 se hace el estado inicial y e2 Estado de aceptacion
         self.EdoIni=e1
+        e1.setId(1)
         e2.setAceptacion(True)
-        self.setEdosAcept(e2)
-        self.EdosAFN=self.EdosAFN | f.getEdosAFN()
+        
+        #Unimos Nuestros conjuntos auxiliares y añadimos nuestros estados e1 y e2 a EstadosAFN
+        self.EdosAFN= conjuntoA | conjuntoB
+        e2.setId(len(self.EdosAFN)+2)
         self.setEdosAFN(e1)
         self.setEdosAFN(e2)
+
+        #Actualizamos los alfabetos y actualizamos los Id's
+        self.actualizarIdsUnion()
+        self.setEdosAcept(e2)
         self.Alfabeto = self.Alfabeto + f.getAlfabeto()
         
         return self
@@ -202,6 +226,26 @@ class AFN():
         self.EdosAFN.add(ei)
         self.EdosAFN.add(ef)
 
+    
+    #Esta actualizacion la hice ya que en la union se crean diversas ramas
+    def actualizarIdsUnion(self):
+        #Creo un conjunto de EdosAFN auxiliar
+        i=1
+        conjunto=set()
+
+        """#Reasigna los Id's incrementalmente exepto si es el estado de aceptacion
+           ya que en la union solo hay uno y debe de ser el id mayor 
+        """
+        for e in self.EdosAFN:
+                if e.getAceptacion() != True:
+                    e.setId(i)
+                    conjunto.add(e)
+                    i+=1
+                else:
+                    conjunto.add(e)
+                
+        self.EdosAFN=conjunto    
+
     def actualizarIds(self, n):
         """Actualiza los IDs de los estados de un AFN dado
 
@@ -274,15 +318,28 @@ class AFN():
 
 # PRUEBAS PARA OPCIONAL ?
 a = AFN()
-a.crearAFNBasico('d')
+b= AFN()
+c= AFN()
+
+a.crearAFNBasico('a','z')
 print("a:", a)
+b.crearAFNBasico('1','9')
+print("b:", b)
+c.crearAFNBasico('A','Z')
+print("c",c)
+
+b.UnirAFN(a)
+c.UnirAFN(b)
+c.imprimirAFN()
+
+"""
 a.imprimirAFN()
 a.opcional()
 print("Opcional\na:", a)
 a.imprimirAFN()
 print("-")
 a.imprimirTransiciones()
-
+"""
 # # PRUEBAS PARA CERRADURA KLEEN *
 # a = AFN()
 # a.crearAFNBasico('a', 'j')
