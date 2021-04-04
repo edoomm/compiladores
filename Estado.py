@@ -17,6 +17,9 @@ class Estado(object):
 
     def getAceptacion(self):
         return self._aceptacion
+
+    def getTransiciones(self):
+        return self._transiciones
         
     def setTransicion(self,trans):
         self._transiciones.add(trans)

@@ -65,7 +65,7 @@ class AFN():
         conjuntoB=set()
         #Llenamos los conjuntos auxiliares
         for c in self.EdosAFN:
-            if c.getAceptacion() != True:
+            if c.getAceptacion() != True: 
                 conjuntoA.add(c)
 
         for c in f.getEdosAFN():
@@ -91,8 +91,8 @@ class AFN():
             acept.setTransicion(t1)
             conjuntoA.add(acept)
    
-        for acept in f.getEdosAcept():
-            t1.setEpsilon(EPSILON,e2)
+        for acept in f.getEdosAcept(): 
+            t1.setEpsilon(EPSILON,e2) 
             acept.setAceptacion(False)
             acept.setTransicion(t1)
             conjuntoB.add(acept)
@@ -225,8 +225,70 @@ class AFN():
         self.EdosAcept.add(ef)
         self.EdosAFN.add(ei)
         self.EdosAFN.add(ef)
-
     
+    # OPCION 7
+    def moverA(self,edo,simb):
+        
+        C=set()
+        aux=None
+
+        for t in edo.getTransiciones():
+            aux= t.getEdoTrans(simb)
+            if aux != None:
+                C.add(aux)
+        
+        return C
+    # OPCION 8
+    def moverAEdos(self,edos,simb):
+        
+        C=set()
+        aux=None
+        for edo in edos:
+            for t in edo.getTransiciones():
+                aux= t.getEdoTrans(simb)
+                if aux != None:
+                    C.add(aux)
+        
+        return C
+    #OPCION 9 
+    def irA(self,edos,simb):
+        """
+        En esta parte pasamos Conjunto de estados
+        Creamos Un Conjunto C que contendra a su vez Conjunto de estados
+        tenemos un Conjunto de estados llamado edosAux
+        iteramos sobre edosAux y sobre cada iteracion guardamos en C conjuntos de edos con los que
+        se tiene la cerradura Positiva.
+        """
+        C=set()
+        edosAux=set()
+        edosAux=self.moverAEdos(edos,simb)
+        for e in edosAux:
+            C.add(self.cerraduraEpsilon(e))
+        return C
+
+    #OPCION 10
+    def cerraduraEpsilon(self,edo):
+        banderaEdo=0
+        C=set()
+        pila=[]
+        edoAux=None
+        edoT=None
+        pila.insert(0,edo)
+
+        while pila != [] :
+            edoAux=pila.pop(0)
+            banderaEdo=0
+            for a in C :
+                if a==edoAux:
+                    banderaEdo=1
+            if banderaEdo == 0 :
+                C.add(edoAux)
+                for t in edoAux :
+                    edoT = t.getEdoTrans(EPSILON)
+                    if edoT != None :
+                        pila.insert(edoT)
+        return C
+
     #Esta actualizacion la hice ya que en la union se crean diversas ramas
     def actualizarIdsUnion(self):
         #Creo un conjunto de EdosAFN auxiliar
@@ -316,6 +378,7 @@ class AFN():
             for t in e._transiciones:
                 print(t)
 
+    
 # PRUEBAS PARA OPCIONAL ?
 a = AFN()
 b= AFN()
