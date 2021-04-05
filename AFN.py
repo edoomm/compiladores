@@ -226,7 +226,14 @@ class AFN():
         self.EdosAFN.add(ei)
         self.EdosAFN.add(ef)
     
-    # OPCION 7
+    # OPCION 7 - Debe ser "Unión para Analizador Léxico"
+
+    # OPCION 8 - Debe ser "Convertir AFN a AFD"
+
+    # OPCION 9 - Debe ser "Analizar una cadena"
+
+    # OPCION 10 - Debe ser "Probar analizador léxico"
+
     def moverA(self,edo,simb):
         
         C=set()
@@ -238,7 +245,7 @@ class AFN():
                 C.add(aux)
         
         return C
-    # OPCION 8
+    
     def moverAEdos(self,edos,simb):
         
         C=set()
@@ -250,7 +257,7 @@ class AFN():
                     C.add(aux)
         
         return C
-    #OPCION 9 
+    
     def irA(self,edos,simb):
         """
         En esta parte pasamos Conjunto de estados
@@ -266,7 +273,6 @@ class AFN():
             C.add(self.cerraduraEpsilon(e))
         return C
 
-    #OPCION 10
     def cerraduraEpsilon(self,edo):
         banderaEdo=0
         C=set()
@@ -353,9 +359,6 @@ class AFN():
 
     def getEdosAcept(self):
         return self.EdosAcept
-
-    # def setAlfabeto(self,simbolo):
-    #     self.Alfabeto.add(simbolo)
     
     def setEdosAcept(self,edo): #Aniadimos al conjunto un elemento
         self.EdosAcept.add(edo)
@@ -392,8 +395,13 @@ c.crearAFNBasico('A','Z')
 print("c",c)
 
 b.UnirAFN(a)
+print("b:", b, "\n-")
+b.imprimirAFN()
+b.imprimirTransiciones()
+print("-----")
 c.UnirAFN(b)
 c.imprimirAFN()
+c.imprimirTransiciones()
 
 """
 a.imprimirAFN()
