@@ -88,6 +88,7 @@ class AFN():
         #self.EdosAFN.clear()
         self.contadorIds=2
         print("----")
+        self.setEdosAFN(e1)
         for t in e1.getTransiciones():
             self.idDefinitivo(t.getEstado())
         #Actualizamos los alfabetos y actualizamos los Id's
@@ -320,19 +321,18 @@ class AFN():
             e.setId(e.idEstado + n)
     
     def idDefinitivo(self,estado):
-        if estado.getTransiciones:
+        if estado.getTransiciones():
             estado.setId(self.contadorIds)
             self.EdosAFN.add(estado)
             self.contadorIds+=1
             for t in estado.getTransiciones():
-                print(estado,t)
                 self.idDefinitivo(t.getEstado())
         else:
-            estado.setId(len(self.EdosAFN)+2)
-            print("***",estado,estado.getAceptacion())
+            estado.setAceptacion(True)
+            estado.setId(len(self.EdosAFN))
+            self.EdosAFN.add(estado)
             return
             
-
 
     def obtenerUltimoIdEstado(self):
         """Obtiene el último ID que se tiene en todo el set de estados de un AFN
@@ -401,8 +401,8 @@ print("a:", a)
 b.crearAFNBasico('1','9')
 print("b:", b)
 b.UnirAFN(a)
-#b.imprimirAFN()
-#b.imprimirTransiciones()
+b.imprimirAFN()
+b.imprimirTransiciones()
 
 """
 a.imprimirAFN()
