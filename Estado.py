@@ -4,10 +4,17 @@ class Estado(object):
     """Representa un estado junto con las transiciones que tiene y si es de aceptación o no
     """
     def __init__(self):
+        self.punto=0   #este nuevo valor nos servira para saber si es el primero o el ultimo estado 0=intermedio 1=primero 2=ultimo
         self.idEstado=1
         self._transiciones=set()
         self._aceptacion=False
         self.token=-1
+    
+    def setPunto(self,num):
+        self.punto=num
+    
+    def getPunto(self):
+        return self.punto
 
     def setId(self,id):
         self.idEstado=id

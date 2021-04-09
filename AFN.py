@@ -7,6 +7,7 @@ FIN = chr(0)
 
 class AFN():
     def __init__(self):
+        self.contadorIds=0
         self.incremento=0
         self.EdoIni=None
         self.EdosAcept=set()
@@ -60,18 +61,7 @@ class AFN():
 
     # OPCIÓN 2
     def UnirAFN(self,f):
-        #Creamos dos conjuntos auxiliares para los EdosAFN
-        conjuntoA=set()
-        conjuntoB=set()
-        #Llenamos los conjuntos auxiliares
-        for c in self.EdosAFN:
-            if c.getAceptacion() != True: 
-                conjuntoA.add(c)
-
-        for c in f.getEdosAFN():
-            if c.getAceptacion() != True :
-                conjuntoB.add(c)
-
+        
         #Creamos Estados inicial=1 y final=2 junto con las transiciones
         e1=Estado()
         e2=Estado()
@@ -81,40 +71,26 @@ class AFN():
         t2.setEpsilon(EPSILON,f.getEdoInicial())
         e1.setTransicion(t1)
         e1.setTransicion(t2)
-
-        """Aniadimos la transicion EPSILON a los conjuntos de aceptacion y
-           eliminamos la aceptacion,aniadiendo asi anuestros Estados a los conjuntos aux 
-        """
-        for acept in self.EdosAcept:
-            t1.setEpsilon(EPSILON,e2)
-            acept.setAceptacion(False)
-            acept.setTransicion(t1)
-            conjuntoA.add(acept)
-   
-        for acept in f.getEdosAcept(): 
-            t1.setEpsilon(EPSILON,e2) 
-            acept.setAceptacion(False)
-            acept.setTransicion(t1)
-            conjuntoB.add(acept)
-
-        #Limpiamos los estados de aceptacion tanto de self como de f
+        e2.setPunto(2)
+        e2.setAceptacion(True)
+        
         self.limpiar()
+        
+        for t in e1.getTransiciones():
+            self.buscarEdoAcept(t.getEstado(),e2)
+
         f.getEdosAcept().clear()
 
         #e1 se hace el estado inicial y e2 Estado de aceptacion
         self.EdoIni=e1
         e1.setId(1)
-        e2.setAceptacion(True)
-        
-        #Unimos Nuestros conjuntos auxiliares y añadimos nuestros estados e1 y e2 a EstadosAFN
-        self.EdosAFN= conjuntoA | conjuntoB
-        e2.setId(len(self.EdosAFN)+2)
-        self.setEdosAFN(e1)
-        self.setEdosAFN(e2)
-
+        e1.setPunto(1)
+        #self.EdosAFN.clear()
+        self.contadorIds=2
+        print("----")
+        for t in e1.getTransiciones():
+            self.idDefinitivo(t.getEstado())
         #Actualizamos los alfabetos y actualizamos los Id's
-        self.actualizarIdsUnion()
-        self.setEdosAcept(e2)
         self.Alfabeto = self.Alfabeto + f.getAlfabeto()
         
         return self
@@ -234,6 +210,20 @@ class AFN():
 
     # OPCION 10 - Debe ser "Probar analizador léxico"
 
+    def buscarEdoAcept(self, edo,edof):
+        if edo.getTransiciones():
+            for t in edo.getTransiciones():
+               print(edo,t)
+               self.buscarEdoAcept(t.getEstado(),edof)
+        else:
+            print(edo,edo.getAceptacion())
+            t1=Transicion()
+            t1.setEpsilon(EPSILON,edof)
+            edo.setAceptacion(False)
+            edo.setTransicion(t1)
+            self.setEdosAcept(edof)
+            return           
+
     def moverA(self,edo,simb):
         
         C=set()
@@ -328,6 +318,21 @@ class AFN():
         # Luego se actualiza con la n, que debe ser el número de estados de un AFN dado
         for e in self.EdosAFN:
             e.setId(e.idEstado + n)
+    
+    def idDefinitivo(self,estado):
+        if estado.getTransiciones:
+            estado.setId(self.contadorIds)
+            self.EdosAFN.add(estado)
+            self.contadorIds+=1
+            for t in estado.getTransiciones():
+                print(estado,t)
+                self.idDefinitivo(t.getEstado())
+        else:
+            estado.setId(len(self.EdosAFN)+2)
+            print("***",estado,estado.getAceptacion())
+            return
+            
+
 
     def obtenerUltimoIdEstado(self):
         """Obtiene el último ID que se tiene en todo el set de estados de un AFN
@@ -375,11 +380,15 @@ class AFN():
                 print("Edo acept:", e)
             else:
                 print(e)
+    
+    def imprimirTransicionesEstado(self,estado):
+           for t in estado.getTransiciones():
+                print(estado,"-",t)
 
     def imprimirTransiciones(self):
         for e in self.EdosAFN:
             for t in e._transiciones:
-                print(t)
+                print(e,"-",t)
 
     
 # PRUEBAS PARA OPCIONAL ?
@@ -391,17 +400,9 @@ a.crearAFNBasico('a','z')
 print("a:", a)
 b.crearAFNBasico('1','9')
 print("b:", b)
-c.crearAFNBasico('A','Z')
-print("c",c)
-
 b.UnirAFN(a)
-print("b:", b, "\n-")
-b.imprimirAFN()
-b.imprimirTransiciones()
-print("-----")
-c.UnirAFN(b)
-c.imprimirAFN()
-c.imprimirTransiciones()
+#b.imprimirAFN()
+#b.imprimirTransiciones()
 
 """
 a.imprimirAFN()

@@ -31,6 +31,13 @@ class Transicion():
         self.SInferior=simb  
         self.SSuperior=simb
         self.estado=e
+    
+    def getEstado(self):
+        return self.estado
+
+    def setEstado(self,edo):
+        self.estado=edo
+
 
     def __str__(self):
-        return str(self.estado) + " " + self.SInferior + "-" + self.SSuperior
+        return self.SInferior + "-" + self.SSuperior + "- >" + str(self.estado)  
