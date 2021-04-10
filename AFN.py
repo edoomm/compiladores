@@ -413,7 +413,15 @@ class AnalizadorLexico(object):
      Métodos
     '''
     # OPCION 7 - Debe ser "Unión para Analizador Léxico"
-    def union(self, afns, returnAFN=True):
+    def union(self, afns):
+        """Une una lista de AFNs en un AFN Especial que es el analizador léxico
+
+        Args:
+            afns (list): Lista de los AFNs a unir
+
+        Returns:
+            AFN: El analizador léxico
+        """
         # Se validan que sean AFNs primero
         for a in afns:
             if not isinstance(a, AFN):
