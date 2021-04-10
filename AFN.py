@@ -126,7 +126,7 @@ class AFN():
         ef = Estado()
 
         # Se crean y añaden las transiciones epsilon
-        ei._transiciones.add(Transicion(simb1=EPSILON, edo=ei))
+        ei._transiciones.add(Transicion(simb1=EPSILON, edo=self.EdoIni))
         for e in self.EdosAcept:
             e._transiciones.add(Transicion(simb1=EPSILON, edo=ef))
             e._transiciones.add(Transicion(simb1=EPSILON, edo=self.EdoIni))
@@ -203,8 +203,6 @@ class AFN():
         self.EdosAFN.add(ei)
         self.EdosAFN.add(ef)
     
-    # OPCION 7 - Debe ser "Unión para Analizador Léxico"
-
     # OPCION 8 - Debe ser "Convertir AFN a AFD"
 
     # OPCION 9 - Debe ser "Analizar una cadena"
@@ -390,19 +388,66 @@ class AFN():
             for t in e._transiciones:
                 print(e,"-",t)
 
+class AnalizadorLexico(object):
+    """Representa un analizador léxico que se construye a partir de AFNs
+    """
+    def __init__(self):
+        self._tokens = []
+    
+    # Abstracción
+    @property
+    def tokens(self):
+        return self._tokens
+    @tokens.setter
+    def tokens(self, value):
+        self._tokens = value
+
+    # OPCION 7 - Debe ser "Unión para Analizador Léxico"
+    def union(self, afns):
+        # Se validan que sean AFNs primero
+        for a in afns:
+            if not isinstance(a, AFN):
+                print("El objeto", a, "no es un AFN")
+                return None
+
+        # Se crea el estado inicial y se añaden las transiciones epsilon a los AFNs
+        ei = Estado()
+        ei.setId(0)
+        ultimoId = 0
+        for a in afns:
+            ei._transiciones.add(Transicion(simb1=EPSILON, edo=a))
+            a.actualizarIds(ultimoId + 1)
+            ultimoId = a.obtenerUltimoIdEstado()
+        pass
     
 # PRUEBAS PARA OPCIONAL ?
 a = AFN()
 b= AFN()
 c= AFN()
 
-a.crearAFNBasico('a','z')
+a.crearAFNBasico('0', '9')
+a.cerradurap()
 print("a:", a)
-b.crearAFNBasico('1','9')
-print("b:", b)
-b.UnirAFN(a)
-b.imprimirAFN()
-b.imprimirTransiciones()
+a.imprimirTransiciones()
+
+# a.crearAFNBasico('x', 'y')
+# b.crearAFNBasico('.')
+# c.crearAFNBasico('0', '9')
+# d = "a"
+
+# analizador = AnalizadorLexico()
+# analizador.union([a,b,c])
+
+# # PRUEBAS PARA UNIÓN
+# a.crearAFNBasico('a','z')
+# print("a:", a)
+# b.crearAFNBasico('1','9')
+# print("b:", b)
+# b.UnirAFN(a)
+# print("-\n-")
+# b.imprimirAFN()
+# print("-\n-")
+# b.imprimirTransiciones()
 
 """
 a.imprimirAFN()
