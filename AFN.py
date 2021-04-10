@@ -6,15 +6,21 @@ EPSILON = chr(5)
 FIN = chr(0)
 
 class AFN():
-    def __init__(self):
+    def __init__(self, id=0):
         self.contadorIds=0
         self.incremento=0
         self.EdoIni=None
         self.EdosAcept=set()
         self.EdosAFN=set()
         self.Alfabeto = set()
-        self.idAFN=0
+        self.idAFN = id
     
+    def __str__(self):
+        print("AFN con ID:", self.idAFN)
+        a = list(self.Alfabeto)
+        a.sort()
+        return "El alfabeto es:"+ str(a)
+
     # OPCIÓN 1
     # AFNBasico para simbolo inferior (o superior)
     def crearAFNBasico(self,simbolo, s2=None):
@@ -31,7 +37,7 @@ class AFN():
             if ord(simbolo) < ord(s2):
                 # Si todo es valido entonces
                 simbolo2 = s2
-            else:
+            elif simbolo != s2:
                 print("Error: Se creará un AFN con solo el primer simbolo que se dió, porque el simbolo superior es mayor que el inferior")
 
         # Se crea el primer estado con un id>=0
@@ -343,11 +349,6 @@ class AFN():
 
         return a
 
-    def __str__(self):
-        a = list(self.Alfabeto)
-        a.sort()
-        return "El alfabeto es:"+ str(a)
-
     def getAlfabeto(self):
         return self.Alfabeto
 
@@ -468,20 +469,113 @@ class AnalizadorLexico(object):
         self.afn.EdosAFN = edosafn
         self.afn.EdosAFN.add(ei)
         self.afn.Alfabeto = alf
+
+
+
+''' Programa principal
+'''
+
+idsAfns = 0 # Servirá para asignar IDs a los AFNs que vayan siendo creados
+AFNs = [] # Servirá para ir guardando los AFNs creados
+
+def error(msj = None):
+    """Imprime un mensaje de error
+
+    Args:
+        msj (str): Mensaje adicional a agregar al error
+    """
+    if msj == None:
+        print("ERROR")
+    else:
+        print("ERROR:", msj)
+    input("Presione cualquier letra para continuar...")
+
+def imprimirMenu():
+    """Imprime el menú del programa principal
+    """
+    print("Menu")
+    print("---------------")
+    print("1) Crear AFN básico")
+    print("2) Unir AFNs")
+    print("3) Concatenar AFNs")
+    print("4) Cerradura positiva")
+    print("5) Cerradura de Kleene")
+    print("6) Opcional")
+    print("7) Unión para Analizador Léxico")
+    print("8) Convertir AFN a AFD")
+    print("9) Analizar una cadena")
+    print("10) Probar analizador léxico")
+    print("\n0) Salir")
+
+def leerCaracter(msj):
+    """Lee un caracter. Si el usuario ingresa una cadena, solo se tomará en cuenta el primer caracter de la cadena
+
+    Args:
+        msj (str): Mensaje adicional a agregar al error
+
+    Returns:
+        chr: El caracter leido
+    """
+    s = input(msj)
+    if len(s) > 1:
+        print("Solo se tomará el primer caracter de su cadena")
     
-# PRUEBAS PARA ANALIZADOR LÉXICO
-a = AFN()
-b = AFN()
-c = AFN()
+    return s[0]
 
-a.crearAFNBasico('x', 'y')
-b.crearAFNBasico('.')
-c.crearAFNBasico('0', '9')
-d = "a"
+def crearAfnBasico():
+    """Opción del menú para que el usuario pueda crear un AFN básico
+    """
+    s1 = leerCaracter("Ingrese el simbolo inferior: ")
+    s2 = leerCaracter("Ingrese el simbolo superior: ")
 
-analizador = AnalizadorLexico()
-analizador.union([a,b,c])
-print(analizador)
+    if ord(s1) > ord(s2):
+        error("En la lectura de los caractéres. El caracter inferior es superior al caracter superior")
+        return
+
+    global idsAfns
+    a = AFN(idsAfns)
+    a.crearAFNBasico(s1, s2)
+
+    print("AFN con ID", a.idAFN, "creado con éxito")
+    idsAfns += 1
+
+    AFNs.append(a)
+
+def menu(op):
+    """Función que sirve para esocger la acción que el usuario desea realizar
+
+    Args:
+        op (int): La opción escojida por el usuario
+    """
+    if op == 1:
+        crearAfnBasico()
+    else:
+        error("Opción no valida. Vuelva a intentarlo")
+
+def main():
+    """Función principal que hace correr el programa
+    """
+    op = -1
+    while op != 0:
+        imprimirMenu()
+        op = int(input("Su opción: "))
+        menu(op)
+
+main()
+
+# # PRUEBAS PARA ANALIZADOR LÉXICO
+# a = AFN()
+# b = AFN()
+# c = AFN()
+
+# a.crearAFNBasico('x', 'y')
+# b.crearAFNBasico('.')
+# c.crearAFNBasico('0', '9')
+# d = "a"
+
+# analizador = AnalizadorLexico()
+# analizador.union([a,b,c])
+# print(analizador)
 
 # # PRUEBAS PARA AFNs ([a-z] | [A-Z]) o ([a-z] | [A-Z] | [0-9])*
 # # Creación de ([a-z] | [A-Z])
