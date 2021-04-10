@@ -397,10 +397,17 @@ class AnalizadorLexico(object):
     """Representa un analizador léxico que se construye a partir de AFNs
     """
     def __init__(self):
+        self._afn = AFN()
         self._tokens = []
     
-    '''
-     Atributos
+    def __str__(self):
+        self.afn.imprimir()
+        strtokens = "Tokens: "
+        for t in self.tokens:
+            strtokens += "(" + str(t[0]) + ", " + str(t[1]) + "), "
+        return strtokens[:len(strtokens)-2]
+
+    ''' Atributos
     '''
     @property
     def tokens(self):
@@ -408,9 +415,14 @@ class AnalizadorLexico(object):
     @tokens.setter
     def tokens(self, value):
         self._tokens = value
+    @property
+    def afn(self):
+        return self._afn
+    @afn.setter
+    def afn(self, value):
+        self._afn = value
 
-    '''
-     Métodos
+    ''' Métodos
     '''
     # OPCION 7 - Debe ser "Unión para Analizador Léxico"
     def union(self, afns):
@@ -418,9 +430,6 @@ class AnalizadorLexico(object):
 
         Args:
             afns (list): Lista de los AFNs a unir
-
-        Returns:
-            AFN: El analizador léxico
         """
         # Se validan que sean AFNs primero
         for a in afns:
@@ -432,8 +441,8 @@ class AnalizadorLexico(object):
         ei = Estado()
         ei.setId(0)
         ultimoId = 0
+        token = 10
         # Atributos del AFN Especial
-        aesp = AFN()
         edosacc = set()
         edosafn = set()
         alf = set()
@@ -446,17 +455,19 @@ class AnalizadorLexico(object):
             # Añadiendo estados de aceptación
             for eacc in a.getEdosAcept():
                 edosacc.add(eacc)
+                edosacc.token = token
+                self.tokens.append((eacc, token))
+            token += 10
             # Añadiendo estados
             for edo in a.getEdosAFN():
                 edosafn.add(edo)
         
         # Asociando atributos al AFN Especial
-        aesp.EdoIni = ei
-        aesp.EdosAcept = edosacc
-        aesp.EdosAFN = edosafn
-        aesp.EdosAFN.add(ei)
-        aesp.Alfabeto = alf
-        return aesp
+        self.afn.EdoIni = ei
+        self.afn.EdosAcept = edosacc
+        self.afn.EdosAFN = edosafn
+        self.afn.EdosAFN.add(ei)
+        self.afn.Alfabeto = alf
     
 # PRUEBAS PARA ANALIZADOR LÉXICO
 a = AFN()
@@ -469,8 +480,8 @@ c.crearAFNBasico('0', '9')
 d = "a"
 
 analizador = AnalizadorLexico()
-aespecial = analizador.union([a,b,c])
-aespecial.imprimir()
+analizador.union([a,b,c])
+print(analizador)
 
 # # PRUEBAS PARA AFNs ([a-z] | [A-Z]) o ([a-z] | [A-Z] | [0-9])*
 # # Creación de ([a-z] | [A-Z])
