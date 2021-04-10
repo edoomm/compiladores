@@ -12,7 +12,7 @@ class AFN():
         self.EdoIni=None
         self.EdosAcept=set()
         self.EdosAFN=set()
-        self.Alfabeto = []
+        self.Alfabeto = set()
         self.idAFN=0
     
     # OPCIÓN 1
@@ -50,14 +50,12 @@ class AFN():
 
         # Se actualiza el alfabeto
         for i in range(ord(simbolo), ord(simbolo2) + 1):
-            # self.Alfabeto.add(chr(i))
-            self.Alfabeto.append(chr(i))
+            self.Alfabeto.add(chr(i))
 
         self.EdoIni=e1
         self.setEdosAFN(e1)
         self.setEdosAFN(e2)
         self.setEdosAcept(e2)
-        # self.setAlfabeto(simbolo)
 
     # OPCIÓN 2
     def UnirAFN(self,f):
@@ -92,7 +90,7 @@ class AFN():
         for t in e1.getTransiciones():
             self.idDefinitivo(t.getEstado())
         #Actualizamos los alfabetos y actualizamos los Id's
-        self.Alfabeto = self.Alfabeto + f.getAlfabeto()
+        self.Alfabeto = self.Alfabeto | f.getAlfabeto()
         
         return self
     
@@ -115,8 +113,7 @@ class AFN():
         # Se actualiza self
         self.EdosAcept = f.EdosAcept
         self.EdosAFN = self.EdosAFN | f.EdosAFN
-        self.Alfabeto = list(set(self.Alfabeto + f.Alfabeto))
-        self.Alfabeto.sort()
+        self.Alfabeto = self.Alfabeto | f.getAlfabeto()
 
     # OPCIÓN 4
     def cerradurap(self):
@@ -347,7 +344,9 @@ class AFN():
         return a
 
     def __str__(self):
-        return "El alfabeto es:"+ str(self.Alfabeto)
+        a = list(self.Alfabeto)
+        a.sort()
+        return "El alfabeto es:"+ str(a)
 
     def getAlfabeto(self):
         return self.Alfabeto
@@ -400,7 +399,9 @@ class AnalizadorLexico(object):
     def __init__(self):
         self._tokens = []
     
-    # Abstracción
+    '''
+     Atributos
+    '''
     @property
     def tokens(self):
         return self._tokens
@@ -408,8 +409,11 @@ class AnalizadorLexico(object):
     def tokens(self, value):
         self._tokens = value
 
+    '''
+     Métodos
+    '''
     # OPCION 7 - Debe ser "Unión para Analizador Léxico"
-    def union(self, afns):
+    def union(self, afns, returnAFN=True):
         # Se validan que sean AFNs primero
         for a in afns:
             if not isinstance(a, AFN):
@@ -420,10 +424,18 @@ class AnalizadorLexico(object):
         ei = Estado()
         ei.setId(0)
         ultimoId = 0
+
         for a in afns:
             ei._transiciones.add(Transicion(simb1=EPSILON, edo=a))
             a.actualizarIds(ultimoId + 1)
             ultimoId = a.obtenerUltimoIdEstado()
+        
+        # Creación del AFN Especial
+        if returnAFN:
+            return self.crearAFNEspecial(ei)
+
+    def crearAFNEspecial(self, ei):
+        aesp = AFN()
         pass
     
 # # PRUEBAS PARA ANALIZADOR LÉXICO
@@ -440,12 +452,26 @@ class AnalizadorLexico(object):
 # analizador.union([a,b,c])
 
 # # PRUEBAS PARA AFNs ([a-z] | [A-Z]) o ([a-z] | [A-Z] | [0-9])*
+# # Creación de ([a-z] | [A-Z])
 # a = AFN()
 # a.crearAFNBasico('a', 'z')
 # b = AFN()
 # b.crearAFNBasico('A', 'Z')
 # a.UnirAFN(b)
 # a.imprimir()
+
+# # Creación de ([a-z] | [A-Z] | [0-9])*
+# c = AFN()
+# c.crearAFNBasico('a', 'z')
+# d = AFN()
+# d.crearAFNBasico('A', 'Z')
+# e = AFN()
+# e.crearAFNBasico('0', '9')
+
+# # c.UnirAFN(d)
+# c.UnirAFN(e)
+# c.imprimir()
+
 
 # PRUEBAS PARA AFNs [0-9]+, [0-9]+ o . o [0-9]+
 # Sí está bien, pero los IDs de los estados están raros xD
