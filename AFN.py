@@ -424,32 +424,45 @@ class AnalizadorLexico(object):
         ei = Estado()
         ei.setId(0)
         ultimoId = 0
-
-        for a in afns:
-            ei._transiciones.add(Transicion(simb1=EPSILON, edo=a))
-            a.actualizarIds(ultimoId + 1)
-            ultimoId = a.obtenerUltimoIdEstado()
-        
-        # Creación del AFN Especial
-        if returnAFN:
-            return self.crearAFNEspecial(ei)
-
-    def crearAFNEspecial(self, ei):
+        # Atributos del AFN Especial
         aesp = AFN()
-        pass
+        edosacc = set()
+        edosafn = set()
+        alf = set()
+        # Recorrido por todo
+        for a in afns:
+            ei._transiciones.add(Transicion(simb1=EPSILON, edo=a.EdoIni))
+            a.actualizarIds(ultimoId)
+            ultimoId = a.obtenerUltimoIdEstado()
+            alf = alf | a.Alfabeto
+            # Añadiendo estados de aceptación
+            for eacc in a.getEdosAcept():
+                edosacc.add(eacc)
+            # Añadiendo estados
+            for edo in a.getEdosAFN():
+                edosafn.add(edo)
+        
+        # Asociando atributos al AFN Especial
+        aesp.EdoIni = ei
+        aesp.EdosAcept = edosacc
+        aesp.EdosAFN = edosafn
+        aesp.EdosAFN.add(ei)
+        aesp.Alfabeto = alf
+        return aesp
     
-# # PRUEBAS PARA ANALIZADOR LÉXICO
-# a = AFN()
-# b = AFN()
-# c = AFN()
+# PRUEBAS PARA ANALIZADOR LÉXICO
+a = AFN()
+b = AFN()
+c = AFN()
 
-# a.crearAFNBasico('x', 'y')
-# b.crearAFNBasico('.')
-# c.crearAFNBasico('0', '9')
-# d = "a"
+a.crearAFNBasico('x', 'y')
+b.crearAFNBasico('.')
+c.crearAFNBasico('0', '9')
+d = "a"
 
-# analizador = AnalizadorLexico()
-# analizador.union([a,b,c])
+analizador = AnalizadorLexico()
+aespecial = analizador.union([a,b,c])
+aespecial.imprimir()
 
 # # PRUEBAS PARA AFNs ([a-z] | [A-Z]) o ([a-z] | [A-Z] | [0-9])*
 # # Creación de ([a-z] | [A-Z])
@@ -473,32 +486,32 @@ class AnalizadorLexico(object):
 # c.imprimir()
 
 
-# PRUEBAS PARA AFNs [0-9]+, [0-9]+ o . o [0-9]+
-# Sí está bien, pero los IDs de los estados están raros xD
-c = AFN()
+# # PRUEBAS PARA AFNs [0-9]+, [0-9]+ o . o [0-9]+
+# # Sí está bien, pero los IDs de los estados están raros xD
+# c = AFN()
 
-a = AFN()
-a.crearAFNBasico('0', '9')
-a.cerradurap()
-print("a:", a)
-a.imprimirAFN()
-a.imprimirTransiciones()
+# a = AFN()
+# a.crearAFNBasico('0', '9')
+# a.cerradurap()
+# print("a:", a)
+# a.imprimirAFN()
+# a.imprimirTransiciones()
 
-b = AFN()
-b.crearAFNBasico('0', '9')
-b.cerradurap()
+# b = AFN()
+# b.crearAFNBasico('0', '9')
+# b.cerradurap()
 
-c.crearAFNBasico('0', '9')
-c.cerradurap()
+# c.crearAFNBasico('0', '9')
+# c.cerradurap()
 
-d = AFN()
-d.crearAFNBasico('.')
+# d = AFN()
+# d.crearAFNBasico('.')
 
-b.concatenar(d)
-b.concatenar(c)
-print("b:", b)
-b.imprimirAFN()
-b.imprimirTransiciones()
+# b.concatenar(d)
+# b.concatenar(c)
+# print("b:", b)
+# b.imprimirAFN()
+# b.imprimirTransiciones()
 
 # # PRUEBAS PARA UNIÓN
 # a.crearAFNBasico('a','z')
