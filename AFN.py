@@ -115,7 +115,8 @@ class AFN():
         # Se actualiza self
         self.EdosAcept = f.EdosAcept
         self.EdosAFN = self.EdosAFN | f.EdosAFN
-        self.Alfabeto += f.Alfabeto
+        self.Alfabeto = list(set(self.Alfabeto + f.Alfabeto))
+        self.Alfabeto.sort()
 
     # OPCIÓN 4
     def cerradurap(self):
@@ -388,6 +389,11 @@ class AFN():
             for t in e._transiciones:
                 print(e,"-",t)
 
+    def imprimir(self):
+        print("-----\n", self)
+        self.imprimirAFN()
+        self.imprimirTransiciones()
+
 class AnalizadorLexico(object):
     """Representa un analizador léxico que se construye a partir de AFNs
     """
@@ -420,15 +426,10 @@ class AnalizadorLexico(object):
             ultimoId = a.obtenerUltimoIdEstado()
         pass
     
-# PRUEBAS PARA OPCIONAL ?
-a = AFN()
-b= AFN()
-c= AFN()
-
-a.crearAFNBasico('0', '9')
-a.cerradurap()
-print("a:", a)
-a.imprimirTransiciones()
+# # PRUEBAS PARA ANALIZADOR LÉXICO
+# a = AFN()
+# b = AFN()
+# c = AFN()
 
 # a.crearAFNBasico('x', 'y')
 # b.crearAFNBasico('.')
@@ -437,6 +438,41 @@ a.imprimirTransiciones()
 
 # analizador = AnalizadorLexico()
 # analizador.union([a,b,c])
+
+# # PRUEBAS PARA AFNs ([a-z] | [A-Z]) o ([a-z] | [A-Z] | [0-9])*
+# a = AFN()
+# a.crearAFNBasico('a', 'z')
+# b = AFN()
+# b.crearAFNBasico('A', 'Z')
+# a.UnirAFN(b)
+# a.imprimir()
+
+# PRUEBAS PARA AFNs [0-9]+, [0-9]+ o . o [0-9]+
+# Sí está bien, pero los IDs de los estados están raros xD
+c = AFN()
+
+a = AFN()
+a.crearAFNBasico('0', '9')
+a.cerradurap()
+print("a:", a)
+a.imprimirAFN()
+a.imprimirTransiciones()
+
+b = AFN()
+b.crearAFNBasico('0', '9')
+b.cerradurap()
+
+c.crearAFNBasico('0', '9')
+c.cerradurap()
+
+d = AFN()
+d.crearAFNBasico('.')
+
+b.concatenar(d)
+b.concatenar(c)
+print("b:", b)
+b.imprimirAFN()
+b.imprimirTransiciones()
 
 # # PRUEBAS PARA UNIÓN
 # a.crearAFNBasico('a','z')
