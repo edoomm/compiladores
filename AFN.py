@@ -429,7 +429,7 @@ class AnalizadorLexico(object):
             # Añadiendo estados de aceptación
             for eacc in a.getEdosAcept():
                 edosacc.add(eacc)
-                edosacc.token = token
+                eacc.token = token
                 self.tokens.append((eacc, token))
             token += 10
             # Añadiendo estados
@@ -536,19 +536,19 @@ def main():
 
 # main()
 
-# # PRUEBAS PARA ANALIZADOR LÉXICO
-# a = AFN()
-# b = AFN()
-# c = AFN()
+# PRUEBAS PARA ANALIZADOR LÉXICO
+a = AFN()
+b = AFN()
+c = AFN()
 
-# a.crearAFNBasico('x', 'y')
-# b.crearAFNBasico('.')
-# c.crearAFNBasico('0', '9')
-# d = "a"
+a.crearAFNBasico('x', 'y')
+b.crearAFNBasico('.')
+c.crearAFNBasico('0', '9')
+d = "a"
 
-# analizador = AnalizadorLexico()
-# analizador.union([a,b,c])
-# print(analizador)
+analizador = AnalizadorLexico()
+analizador.union([a,b,c])
+print(analizador)
 
 # # PRUEBAS PARA AFNs ([a-z] | [A-Z]) o ([a-z] | [A-Z] | [0-9])*
 # # Creación de ([a-z] | [A-Z])
@@ -559,17 +559,17 @@ def main():
 # a.UnirAFN(b)
 # a.imprimir()
 
-# Creación de ([a-z] | [A-Z] | [0-9])*
-c = AFN()
-c.crearAFNBasico('a', 'z')
-d = AFN()
-d.crearAFNBasico('A', 'Z')
-e = AFN()
-e.crearAFNBasico('0', '9')
+# # Creación de ([a-z] | [A-Z] | [0-9])*
+# c = AFN()
+# c.crearAFNBasico('a', 'z')
+# d = AFN()
+# d.crearAFNBasico('A', 'Z')
+# e = AFN()
+# e.crearAFNBasico('0', '9')
 
-c.unir(d)
-c.unir(e)
-c.imprimir()
+# c.unir(d)
+# c.unir(e)
+# c.imprimir()
 
 
 # # PRUEBAS PARA AFNs [0-9]+, [0-9]+ o . o [0-9]+
