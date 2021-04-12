@@ -57,6 +57,31 @@ def leerCaracter(msj):
     
     return s[0]
 
+def leerID(msj):
+    """Lee un ID valido de la lista de AFNs que se tiene
+
+    Args:
+        msj (str): El mensaje que se despliega en la función input()
+
+    Returns:
+        int: El ID valido
+    """
+    n = "NaN"
+    while not n.isdigit():
+        n = input(msj)
+    n = int(n)
+    if not (0 <= n < len(AFNs)):
+        print("Rango no valido")
+        return leerID(msj)
+
+    return n
+
+def imprimirAFNs():
+    """Imprime la lista de AFNs disponibles
+    """
+    l = [i for i in range(len(AFNs))]
+    print(l)
+
 # Opción 1
 def crearAfnBasico():
     """Opción del menú para que el usuario pueda crear un AFN básico
@@ -79,8 +104,16 @@ def crearAfnBasico():
 
 # Opción 2
 def unirAFNs():
-    
-    pass
+    print("Escoja 2 IDs diferentes de los AFNs disponibles que han sido creados:")
+    imprimirAFNs()
+    id1 = leerID("Ingrese el ID del primer digito: ")
+    id2 = leerID("Ingrese el ID del segundo digito: ")
+    # Se validan que los IDs sean diferentes
+    if id1 != id2:
+        AFNs[id1].unir(AFNs[id2])
+        print("Unión guardada en AFN con ID", id1)
+    else:
+        print("Los IDs deben ser distintos. No se ha hecho ninguna unión")
 
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
@@ -91,7 +124,10 @@ def menu(op):
     if op == 1:
         crearAfnBasico()
     elif op == 2:
-        unirAFNs()
+        if len(AFNs) > 1:
+            unirAFNs()
+        else:
+            print("Debe ingresar al menos 2 AFNs con los que se puedan unir entre ellos")
     elif op == 0:
         print("(:")
         return
