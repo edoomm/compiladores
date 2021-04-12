@@ -134,6 +134,16 @@ def cerradurapositivaAFN(id):
     AFNs[id].cerradurap()
     print("Cerradura positiva hecha con éxito a AFN con ID", id)
 
+# Opción 5
+def cerradurakleneeAFN(id):
+    """Cerradura Kleene de un AFN
+
+    Args:
+        id (int): El ID del AFN al que se le hará su cerradura Kleene
+    """
+    AFNs[id].cerradurak()
+    print("Cerradura Kleene hecha con éxito a AFN con ID", id)
+
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
 
@@ -167,6 +177,8 @@ def menu(op):
             id = leerID("Ingrese el ID del AFN: ")
             if op == 4:
                 cerradurapositivaAFN(id)
+            elif op == 5:
+                cerradurakleneeAFN(id)
     elif op == 0:
         print("(:")
         return
