@@ -3,6 +3,12 @@ from AFN import *
 idsAfns = 0 # Servirá para asignar IDs a los AFNs que vayan siendo creados
 AFNs = [] # Servirá para ir guardando los AFNs creados
 
+def esperar(msj = None):
+    if msj == None:
+        input("Presione cualquier letra para continuar...")
+    else:
+        input(msj)
+
 def error(msj = None):
     """Imprime un mensaje de error
 
@@ -13,7 +19,6 @@ def error(msj = None):
         print("ERROR")
     else:
         print("ERROR:", msj)
-    input("Presione cualquier letra para continuar...")
 
 def imprimirMenu():
     """Imprime el menú del programa principal
@@ -47,6 +52,7 @@ def leerCaracter(msj):
     
     return s[0]
 
+# Opción 1
 def crearAfnBasico():
     """Opción del menú para que el usuario pueda crear un AFN básico
     """
@@ -66,6 +72,11 @@ def crearAfnBasico():
 
     AFNs.append(a)
 
+# Opción 2
+def unirAFNs():
+    
+    pass
+
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
 
@@ -74,8 +85,15 @@ def menu(op):
     """
     if op == 1:
         crearAfnBasico()
+    elif op == 2:
+        unirAFNs()
+    elif op == 0:
+        print("(:")
+        return
     else:
         error("Opción no valida. Vuelva a intentarlo")
+
+    esperar()
 
 def main():
     """Función principal que hace correr el programa
