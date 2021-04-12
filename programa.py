@@ -144,6 +144,16 @@ def cerradurakleneeAFN(id):
     AFNs[id].cerradurak()
     print("Cerradura Kleene hecha con éxito a AFN con ID", id)
 
+# Opción 6
+def opcionalAFN(id):
+    """Opcional de un AFN. Operación '?' de un AFN
+
+    Args:
+        id (int): El ID del AFN al que se le hará su opcional
+    """
+    AFNs[id].opcional()
+    print("Opcional hecho con éxito a AFN con ID", id)
+
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
 
@@ -168,7 +178,7 @@ def menu(op):
                     concatenarAFNs(id1, id2)
             else:
                 print("Los IDs deben ser distintos. No se ha hecho ninguna unión")
-    elif 3 < op < 9:
+    elif 3 < op < 7 or op == 8:
         if len(AFNs) < 1:
             print("Debe haber creado por lo menos un AFN")
         else:
@@ -179,6 +189,11 @@ def menu(op):
                 cerradurapositivaAFN(id)
             elif op == 5:
                 cerradurakleneeAFN(id)
+            elif op == 6:
+                opcionalAFN(id)
+            elif op == 8:
+                # TODO: Conversión de AFN a AFD
+                pass
     elif op == 0:
         print("(:")
         return
