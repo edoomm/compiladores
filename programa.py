@@ -1,4 +1,5 @@
 from AFN import *
+import copy
 
 idsAfns = 0 # Servirá para asignar IDs a los AFNs que vayan siendo creados
 AFNs = [] # Servirá para ir guardando los AFNs creados
@@ -114,7 +115,8 @@ def unirAFNs(id1, id2):
         id1 (int): El ID del primer AFN al que se le hará la unión
         id2 (int): El ID del segundo AFN
     """
-    AFNs[id1].unir(AFNs[id2])
+    aux = copy.deepcopy(AFNs[id2])
+    AFNs[id1].unir(aux)
     print("Unión guardada en AFN con ID", id1)
 
 # Opción 3
@@ -125,7 +127,8 @@ def concatenarAFNs(id1, id2):
         id1 (int): El ID del AFN al que se le pegará la concatenación
         id2 (int): El ID del segundo AFN
     """
-    AFNs[id1].concatenar(AFNs[id2])
+    aux = copy.deepcopy(AFNs[id2])
+    AFNs[id1].concatenar(aux)
     print("Concatenación guardada en AFN con ID", id1)
 
 # Opción 4
