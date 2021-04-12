@@ -124,6 +124,16 @@ def concatenarAFNs(id1, id2):
     AFNs[id1].concatenar(AFNs[id2])
     print("Concatenación guardada en AFN con ID", id1)
 
+# Opción 4
+def cerradurapositivaAFN(id):
+    """Cerradura positiva de un AFN
+
+    Args:
+        id (int): El ID del AFN al que se le hará su cerradura positiva
+    """
+    AFNs[id].cerradurap()
+    print("Cerradura positiva hecha con éxito a AFN con ID", id)
+
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
 
@@ -138,8 +148,8 @@ def menu(op):
         else:
             print("Escoja 2 IDs diferentes de los AFNs disponibles que han sido creados:")
             imprimirAFNs()
-            id1 = leerID("Ingrese el ID del primer digito: ")
-            id2 = leerID("Ingrese el ID del segundo digito: ")
+            id1 = leerID("Ingrese el ID del primer AFN: ")
+            id2 = leerID("Ingrese el ID del segundo AFN: ")
             # Se validan que los IDs sean diferentes
             if id1 != id2:
                 if op == 2:
@@ -148,6 +158,15 @@ def menu(op):
                     concatenarAFNs(id1, id2)
             else:
                 print("Los IDs deben ser distintos. No se ha hecho ninguna unión")
+    elif 3 < op < 9:
+        if len(AFNs) < 1:
+            print("Debe haber creado por lo menos un AFN")
+        else:
+            print("Escoja un ID de los AFNs disponibles que han sido creados:")
+            imprimirAFNs()
+            id = leerID("Ingrese el ID del AFN: ")
+            if op == 4:
+                cerradurapositivaAFN(id)
     elif op == 0:
         print("(:")
         return
