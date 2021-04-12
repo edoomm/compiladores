@@ -103,17 +103,26 @@ def crearAfnBasico():
     AFNs.append(a)
 
 # Opción 2
-def unirAFNs():
-    print("Escoja 2 IDs diferentes de los AFNs disponibles que han sido creados:")
-    imprimirAFNs()
-    id1 = leerID("Ingrese el ID del primer digito: ")
-    id2 = leerID("Ingrese el ID del segundo digito: ")
-    # Se validan que los IDs sean diferentes
-    if id1 != id2:
-        AFNs[id1].unir(AFNs[id2])
-        print("Unión guardada en AFN con ID", id1)
-    else:
-        print("Los IDs deben ser distintos. No se ha hecho ninguna unión")
+def unirAFNs(id1, id2):
+    """Une a través de 2 IDs dados de AFNs a el primer AFN
+
+    Args:
+        id1 (int): El ID del primer AFN al que se le hará la unión
+        id2 (int): El ID del segundo AFN
+    """
+    AFNs[id1].unir(AFNs[id2])
+    print("Unión guardada en AFN con ID", id1)
+
+# Opción 3
+def concatenarAFNs(id1, id2):
+    """Concatena 2 AFNs en un AFN
+
+    Args:
+        id1 (int): El ID del AFN al que se le pegará la concatenación
+        id2 (int): El ID del segundo AFN
+    """
+    AFNs[id1].concatenar(AFNs[id2])
+    print("Concatenación guardada en AFN con ID", id1)
 
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
@@ -123,11 +132,22 @@ def menu(op):
     """
     if op == 1:
         crearAfnBasico()
-    elif op == 2:
-        if len(AFNs) > 1:
-            unirAFNs()
-        else:
+    elif op == 2 or op == 3:
+        if len(AFNs) < 2:
             print("Debe ingresar al menos 2 AFNs con los que se puedan unir entre ellos")
+        else:
+            print("Escoja 2 IDs diferentes de los AFNs disponibles que han sido creados:")
+            imprimirAFNs()
+            id1 = leerID("Ingrese el ID del primer digito: ")
+            id2 = leerID("Ingrese el ID del segundo digito: ")
+            # Se validan que los IDs sean diferentes
+            if id1 != id2:
+                if op == 2:
+                    unirAFNs(id1, id2)
+                else:
+                    concatenarAFNs(id1, id2)
+            else:
+                print("Los IDs deben ser distintos. No se ha hecho ninguna unión")
     elif op == 0:
         print("(:")
         return
