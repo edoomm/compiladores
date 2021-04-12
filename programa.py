@@ -2,6 +2,7 @@ from AFN import *
 
 idsAfns = 0 # Servirá para asignar IDs a los AFNs que vayan siendo creados
 AFNs = [] # Servirá para ir guardando los AFNs creados
+analizador = AnalizadorLexico()
 
 def esperar(msj = None):
     """Muestra un mensaje de espera antes de pasar a una acción siguiente
@@ -57,11 +58,12 @@ def leerCaracter(msj):
     
     return s[0]
 
-def leerID(msj):
+def leerID(msj, end=None):
     """Lee un ID valido de la lista de AFNs que se tiene
 
     Args:
         msj (str): El mensaje que se despliega en la función input()
+        end (str, optional): El caracter con el que puede terminar la lectura de un ID. Defaults to None
 
     Returns:
         int: El ID valido
@@ -69,6 +71,8 @@ def leerID(msj):
     n = "NaN"
     while not n.isdigit():
         n = input(msj)
+        if n == end:
+            return -1
     n = int(n)
     if not (0 <= n < len(AFNs)):
         print("Rango no valido")
@@ -154,6 +158,26 @@ def opcionalAFN(id):
     AFNs[id].opcional()
     print("Opcional hecho con éxito a AFN con ID", id)
 
+# Opción 7
+def unionanlex():
+    """Realiza la construcción del analizador léxico a través de la unión de diferentes AFNs
+    """
+    lst = [] # Lista donde se guardarán los AFNs a unir
+    id = 0
+    while id != -1:
+        print("AFNs escogidos:\n", lst)
+        print("Escoja un ID de los AFNs disponibles (termine con '-1'):")
+        imprimirAFNs()
+        id = leerID("ID: ", "-1")
+        if id == -1:
+            break
+        lst.append(id)
+        lst = list(set(lst)) # Remueve duplicados
+
+    # Se unen y crean el analizador léxico
+    if analizador.union([AFNs[i] for i in lst]) != None:
+        print("Analizador léxico creado correctamente")
+
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
 
@@ -194,6 +218,11 @@ def menu(op):
             elif op == 8:
                 # TODO: Conversión de AFN a AFD
                 pass
+    elif op == 7:
+        if len(AFNs) < 2:
+            print("Debe ingresar al menos 2 AFNs con los que se puedan unir entre ellos")
+        else:
+            unionanlex()
     elif op == 0:
         print("(:")
         return
