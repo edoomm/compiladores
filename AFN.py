@@ -62,44 +62,45 @@ class AFN():
         self.setEdosAFN(e1)
         self.setEdosAFN(e2)
         self.setEdosAcept(e2)
-
-    # OPCIÓN 2
-    def UnirAFN(self,f):
-        
-        #Creamos Estados inicial=1 y final=2 junto con las transiciones
-        e1=Estado()
-        e2=Estado()
-        t1=Transicion()
-        t2=Transicion()
-        t1.setEpsilon(EPSILON,self.getEdoInicial())
-        t2.setEpsilon(EPSILON,f.getEdoInicial())
-        e1.setTransicion(t1)
-        e1.setTransicion(t2)
-        e2.setPunto(2)
-        e2.setAceptacion(True)
-        
-        self.limpiar()
-        
-        for t in e1.getTransiciones():
-            self.buscarEdoAcept(t.getEstado(),e2)
-
-        f.getEdosAcept().clear()
-
-        #e1 se hace el estado inicial y e2 Estado de aceptacion
-        self.EdoIni=e1
-        e1.setId(1)
-        e1.setPunto(1)
-        #self.EdosAFN.clear()
-        self.contadorIds=2
-        print("----")
-        self.setEdosAFN(e1)
-        for t in e1.getTransiciones():
-            self.idDefinitivo(t.getEstado())
-        #Actualizamos los alfabetos y actualizamos los Id's
-        self.Alfabeto = self.Alfabeto | f.getAlfabeto()
-        
-        return self
     
+    # OPCIÓN 2
+    def unir(self, f2):
+        """Función que sirve para unir dos AFNs. Operación '|' en regex
+
+        Args:
+            f2 (AFN): El segundo AFN que se unirá al primer AFN de donde es llamada la función
+        """
+        e1 = Estado()
+        e2 = Estado()
+        # El tendrá dos transiciones epsilon. Una al edo inicial del AFN this, y otra al estado inicial de f2
+        t1 = Transicion(simb1=EPSILON, edo=self.EdoIni)
+        t2 = Transicion(simb1=EPSILON, edo=f2.EdoIni)
+        e1._transiciones.add(t1)
+        e1._transiciones.add(t2)
+        # Ahora cada estado de aceptación de this y f2 tendrá una transiciíon epsilón al nuevo estado de aceptación
+        # Y los estados de aceptación pasan a dejar de ser de aceptación
+        for e in self.EdosAcept:
+            e._transiciones.add(Transicion(simb1=EPSILON, edo=e2))
+            e.aceptacion = False
+        for e in f2.EdosAcept:
+            e._transiciones.add(Transicion(simb1=EPSILON, edo=e2))
+            e._aceptacion = False
+        
+        # Se actualizan ids, primero los de self y luego f2, dependiendo del número que self tenga en su ultimo ID
+        self.actualizarIds(1)
+        f2.actualizarIds(self.obtenerUltimoIdEstado())
+        # Se actualiza la información
+        self.EdosAcept.clear()
+        f2.EdosAcept.clear()
+        self.EdoIni = e1
+        e2.aceptacion = True
+        self.EdosAcept.add(e2)
+        self.EdosAFN = self.EdosAFN | f2.EdosAFN
+        e2.setId(self.obtenerUltimoIdEstado() + 1) # Se actualiza el ID del nuevo estado final con todos los IDs de los AFNs ya en self
+        self.EdosAFN.add(e1)
+        self.EdosAFN.add(e2)
+        self.Alfabeto = self.Alfabeto | f2.Alfabeto
+
     # OPCIÓN 3
     def concatenar(self, f):
         """Fusion del estado de aceptación del AFN con el AFN f. Se conserva el estado de aceptación del AFN original
@@ -213,20 +214,6 @@ class AFN():
 
     # OPCION 10 - Debe ser "Probar analizador léxico"
 
-    def buscarEdoAcept(self, edo,edof):
-        if edo.getTransiciones():
-            for t in edo.getTransiciones():
-               print(edo,t)
-               self.buscarEdoAcept(t.getEstado(),edof)
-        else:
-            print(edo,edo.getAceptacion())
-            t1=Transicion()
-            t1.setEpsilon(EPSILON,edof)
-            edo.setAceptacion(False)
-            edo.setTransicion(t1)
-            self.setEdosAcept(edof)
-            return           
-
     def moverA(self,edo,simb):
         
         C=set()
@@ -322,20 +309,6 @@ class AFN():
         for e in self.EdosAFN:
             e.setId(e.idEstado + n)
     
-    def idDefinitivo(self,estado):
-        if estado.getTransiciones():
-            estado.setId(self.contadorIds)
-            self.EdosAFN.add(estado)
-            self.contadorIds+=1
-            for t in estado.getTransiciones():
-                self.idDefinitivo(t.getEstado())
-        else:
-            estado.setAceptacion(True)
-            estado.setId(len(self.EdosAFN))
-            self.EdosAFN.add(estado)
-            return
-            
-
     def obtenerUltimoIdEstado(self):
         """Obtiene el último ID que se tiene en todo el set de estados de un AFN
 
@@ -561,7 +534,7 @@ def main():
         op = int(input("Su opción: "))
         menu(op)
 
-main()
+# main()
 
 # # PRUEBAS PARA ANALIZADOR LÉXICO
 # a = AFN()
@@ -586,17 +559,17 @@ main()
 # a.UnirAFN(b)
 # a.imprimir()
 
-# # Creación de ([a-z] | [A-Z] | [0-9])*
-# c = AFN()
-# c.crearAFNBasico('a', 'z')
-# d = AFN()
-# d.crearAFNBasico('A', 'Z')
-# e = AFN()
-# e.crearAFNBasico('0', '9')
+# Creación de ([a-z] | [A-Z] | [0-9])*
+c = AFN()
+c.crearAFNBasico('a', 'z')
+d = AFN()
+d.crearAFNBasico('A', 'Z')
+e = AFN()
+e.crearAFNBasico('0', '9')
 
-# # c.UnirAFN(d)
-# c.UnirAFN(e)
-# c.imprimir()
+c.unir(d)
+c.unir(e)
+c.imprimir()
 
 
 # # PRUEBAS PARA AFNs [0-9]+, [0-9]+ o . o [0-9]+
