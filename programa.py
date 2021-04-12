@@ -4,6 +4,11 @@ idsAfns = 0 # Servirá para asignar IDs a los AFNs que vayan siendo creados
 AFNs = [] # Servirá para ir guardando los AFNs creados
 
 def esperar(msj = None):
+    """Muestra un mensaje de espera antes de pasar a una acción siguiente
+
+    Args:
+        msj (str, optional): El mensaje que se quisiera ver para la espera. Defaults to None.
+    """
     if msj == None:
         input("Presione cualquier letra para continuar...")
     else:
