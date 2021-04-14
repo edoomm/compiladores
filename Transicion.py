@@ -21,6 +21,13 @@ class Transicion():
         if self.SInferior <= simb and simb <= self.SSuperior :
             return self.estado
         return None
+    
+    def getEdoTransEpsilon(self,simb):
+        if self.SInferior==simb and self.SSuperior==simb:
+            return self.estado
+        else:
+            return None
+    
 
     def setParametros(self,Inf,Sup,e):
         self.SInferior=Inf   

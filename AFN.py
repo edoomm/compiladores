@@ -210,10 +210,7 @@ class AFN():
     
     # OPCION 8 - Debe ser "Convertir AFN a AFD"
 
-    def transformarAFNtoAFD(self,automata):
-        #conjuntoEpsilon=set()
-        Ss=set()
-        Ss.add(frozenset(automata.cerraduraEpsilon(automata.getEdoInicial())))
+   
 
     # OPCION 9 - Debe ser "Analizar una cadena"
 
@@ -475,8 +472,10 @@ a.unir(b)
 a.imprimir()
 print("-------")
 dD=set()
-dD=a.irA(a.getEdosAFN(),'g')
-
+dD=a.irA(a.getEdosAFN(),'7')
+for d in dD:
+    for e in d:
+        print(e)
 
 
 # # Creación de ([a-z] | [A-Z] | [0-9])*
