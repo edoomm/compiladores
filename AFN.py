@@ -210,6 +210,11 @@ class AFN():
     
     # OPCION 8 - Debe ser "Convertir AFN a AFD"
 
+    def transformarAFNtoAFD(self,automata):
+        #conjuntoEpsilon=set()
+        Ss=set()
+        Ss.add(frozenset(automata.cerraduraEpsilon(automata.getEdoInicial())))
+
     # OPCION 9 - Debe ser "Analizar una cadena"
 
     # OPCION 10 - Debe ser "Probar analizador léxico"
@@ -250,11 +255,10 @@ class AFN():
         edosAux=set()
         edosAux=self.moverAEdos(edos,simb)
         for e in edosAux:
-            C.add(self.cerraduraEpsilon(e))
+            C.add(frozenset(self.cerraduraEpsilon(e)))
         return C
 
     def cerraduraEpsilon(self,edo):
-        banderaEdo=0
         C=set()
         pila=[]
         edoAux=None
@@ -262,17 +266,18 @@ class AFN():
         pila.insert(0,edo)
 
         while pila != [] :
+            bandera=0
             edoAux=pila.pop(0)
-            banderaEdo=0
-            for a in C :
-                if a==edoAux:
-                    banderaEdo=1
-            if banderaEdo == 0 :
-                C.add(edoAux)
-                for t in edoAux :
-                    edoT = t.getEdoTrans(EPSILON)
-                    if edoT != None :
-                        pila.insert(edoT)
+            C.add(edoAux)
+            #self.imprimirTransicionesEstado(edoAux)
+            for t in edoAux.getTransiciones():
+                edoT = t.getEdoTransEpsilon(EPSILON)
+                if edoT != None:
+                    for e in C:
+                        if e == edoT:
+                            bandera=1   
+                    if bandera <= 0:
+                        pila.insert(0,edoT)
         return C
 
     #Esta actualizacion la hice ya que en la union se crean diversas ramas
@@ -367,8 +372,11 @@ class AFN():
         self.imprimirAFN()
         self.imprimirTransiciones()
 
+    
+
 class AnalizadorLexico(object):
-    """Representa un analizador léxico que se construye a partir de AFNs
+    """
+        Representa un analizador léxico que se construye a partir de AFNs
     """
     def __init__(self):
         self._afn = AFN()
@@ -459,12 +467,17 @@ class AnalizadorLexico(object):
 
 # # PRUEBAS PARA AFNs ([a-z] | [A-Z]) o ([a-z] | [A-Z] | [0-9])*
 # # Creación de ([a-z] | [A-Z])
-# a = AFN()
-# a.crearAFNBasico('a', 'z')
-# b = AFN()
-# b.crearAFNBasico('A', 'Z')
-# a.UnirAFN(b)
-# a.imprimir()
+a = AFN()
+a.crearAFNBasico('a', 'z')
+b = AFN()
+b.crearAFNBasico('0', '9')
+a.unir(b)
+a.imprimir()
+print("-------")
+dD=set()
+dD=a.irA(a.getEdosAFN(),'g')
+
+
 
 # # Creación de ([a-z] | [A-Z] | [0-9])*
 # c = AFN()
