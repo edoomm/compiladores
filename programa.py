@@ -1,7 +1,9 @@
 from AFN import *
+import copy
 
 idsAfns = 0 # Servirá para asignar IDs a los AFNs que vayan siendo creados
 AFNs = [] # Servirá para ir guardando los AFNs creados
+analizador = AnalizadorLexico()
 
 def esperar(msj = None):
     """Muestra un mensaje de espera antes de pasar a una acción siguiente
@@ -57,11 +59,12 @@ def leerCaracter(msj):
     
     return s[0]
 
-def leerID(msj):
+def leerID(msj, end=None):
     """Lee un ID valido de la lista de AFNs que se tiene
 
     Args:
         msj (str): El mensaje que se despliega en la función input()
+        end (str, optional): El caracter con el que puede terminar la lectura de un ID. Defaults to None
 
     Returns:
         int: El ID valido
@@ -69,6 +72,8 @@ def leerID(msj):
     n = "NaN"
     while not n.isdigit():
         n = input(msj)
+        if n == end:
+            return -1
     n = int(n)
     if not (0 <= n < len(AFNs)):
         print("Rango no valido")
@@ -110,7 +115,8 @@ def unirAFNs(id1, id2):
         id1 (int): El ID del primer AFN al que se le hará la unión
         id2 (int): El ID del segundo AFN
     """
-    AFNs[id1].unir(AFNs[id2])
+    aux = copy.deepcopy(AFNs[id2])
+    AFNs[id1].unir(aux)
     print("Unión guardada en AFN con ID", id1)
 
 # Opción 3
@@ -121,8 +127,59 @@ def concatenarAFNs(id1, id2):
         id1 (int): El ID del AFN al que se le pegará la concatenación
         id2 (int): El ID del segundo AFN
     """
-    AFNs[id1].concatenar(AFNs[id2])
+    aux = copy.deepcopy(AFNs[id2])
+    AFNs[id1].concatenar(aux)
     print("Concatenación guardada en AFN con ID", id1)
+
+# Opción 4
+def cerradurapositivaAFN(id):
+    """Cerradura positiva de un AFN
+
+    Args:
+        id (int): El ID del AFN al que se le hará su cerradura positiva
+    """
+    AFNs[id].cerradurap()
+    print("Cerradura positiva hecha con éxito a AFN con ID", id)
+
+# Opción 5
+def cerradurakleneeAFN(id):
+    """Cerradura Kleene de un AFN
+
+    Args:
+        id (int): El ID del AFN al que se le hará su cerradura Kleene
+    """
+    AFNs[id].cerradurak()
+    print("Cerradura Kleene hecha con éxito a AFN con ID", id)
+
+# Opción 6
+def opcionalAFN(id):
+    """Opcional de un AFN. Operación '?' de un AFN
+
+    Args:
+        id (int): El ID del AFN al que se le hará su opcional
+    """
+    AFNs[id].opcional()
+    print("Opcional hecho con éxito a AFN con ID", id)
+
+# Opción 7
+def unionanlex():
+    """Realiza la construcción del analizador léxico a través de la unión de diferentes AFNs
+    """
+    lst = [] # Lista donde se guardarán los AFNs a unir
+    id = 0
+    while id != -1:
+        print("AFNs escogidos:\n", lst)
+        print("Escoja un ID de los AFNs disponibles (termine con '-1'):")
+        imprimirAFNs()
+        id = leerID("ID: ", "-1")
+        if id == -1:
+            break
+        lst.append(id)
+        lst = list(set(lst)) # Remueve duplicados
+
+    # Se unen y crean el analizador léxico
+    if analizador.union([AFNs[i] for i in lst]) != None:
+        print("Analizador léxico creado correctamente")
 
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
@@ -138,8 +195,8 @@ def menu(op):
         else:
             print("Escoja 2 IDs diferentes de los AFNs disponibles que han sido creados:")
             imprimirAFNs()
-            id1 = leerID("Ingrese el ID del primer digito: ")
-            id2 = leerID("Ingrese el ID del segundo digito: ")
+            id1 = leerID("Ingrese el ID del primer AFN: ")
+            id2 = leerID("Ingrese el ID del segundo AFN: ")
             # Se validan que los IDs sean diferentes
             if id1 != id2:
                 if op == 2:
@@ -148,6 +205,27 @@ def menu(op):
                     concatenarAFNs(id1, id2)
             else:
                 print("Los IDs deben ser distintos. No se ha hecho ninguna unión")
+    elif 3 < op < 7 or op == 8:
+        if len(AFNs) < 1:
+            print("Debe haber creado por lo menos un AFN")
+        else:
+            print("Escoja un ID de los AFNs disponibles que han sido creados:")
+            imprimirAFNs()
+            id = leerID("Ingrese el ID del AFN: ")
+            if op == 4:
+                cerradurapositivaAFN(id)
+            elif op == 5:
+                cerradurakleneeAFN(id)
+            elif op == 6:
+                opcionalAFN(id)
+            elif op == 8:
+                # TODO: Conversión de AFN a AFD
+                pass
+    elif op == 7:
+        if len(AFNs) < 2:
+            print("Debe ingresar al menos 2 AFNs con los que se puedan unir entre ellos")
+        else:
+            unionanlex()
     elif op == 0:
         print("(:")
         return
