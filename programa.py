@@ -2,7 +2,7 @@ from AFN import *
 import copy
 
 idsAfns = 0 # Servirá para asignar IDs a los AFNs que vayan siendo creados
-AFNs = [] # Servirá para ir guardando los AFNs creados
+AFNs = {} # Servirá para ir guardando los AFNs creados
 analizador = AnalizadorLexico()
 
 def esperar(msj = None):
@@ -69,23 +69,53 @@ def leerID(msj, end=None):
     Returns:
         int: El ID valido
     """
-    n = "NaN"
-    while not n.isdigit():
-        n = input(msj)
-        if n == end:
+    id = input(msj)
+    try:
+        id = int(id)
+        if id == end: # Acaba la lectura
             return -1
-    n = int(n)
-    if not (0 <= n < len(AFNs)):
-        print("Rango no valido")
+    except:
+        pass
+
+    if id not in AFNs.keys():
+        print("ID no valido, vuelva a intentarlo")
         return leerID(msj)
 
-    return n
+    return id
 
 def imprimirAFNs():
     """Imprime la lista de AFNs disponibles
     """
-    l = [i for i in range(len(AFNs))]
-    print(l)
+    print(list(AFNs.keys()))
+
+def guardarAFN(afn):
+    """Guarda en el diccionario de AFNs un AFN
+
+    Args:
+        afn (AFN): El AFN a aguardar
+    """
+    id = input("Ingrese un ID para identificar el AFN creado\n(Si no ingresa nada, el AFN será guardado con un número)\nID: ")
+    if not id:
+        AFNs[idsAfns] = afn
+    else:
+        # Se verifica si el ID es un número y si también no ya existe en los IDs
+        try:
+            idnum = int(id)
+            if idnum < 0:
+                print("No se puede usar un ID negativo, vuelva a intentar con otro ID")
+                guardarAFN(afn)
+                return
+            else:
+                id = idnum
+        except:
+            pass
+        if id in AFNs.keys():
+            print("El ID ingresado ya existe, vuelva a intentar con otro ID")
+            guardarAFN(afn)
+            return
+        
+        afn.idAFN = id
+        AFNs[id] = afn
 
 # Opción 1
 def crearAfnBasico():
@@ -105,7 +135,7 @@ def crearAfnBasico():
     print("AFN con ID", a.idAFN, "creado con éxito")
     idsAfns += 1
 
-    AFNs.append(a)
+    guardarAFN(a)
 
 # Opción 2
 def unirAFNs(id1, id2):
