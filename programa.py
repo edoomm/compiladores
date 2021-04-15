@@ -41,7 +41,7 @@ def imprimirMenu():
     print("7) Unión para Analizador Léxico")
     print("8) Convertir AFN a AFD")
     print("9) Analizar una cadena")
-    print("10) Probar analizador léxico")
+    print("10) Eliminar AFN de la lista de AFNs")
     print("\n0) Salir")
 
 def leerCaracter(msj):
@@ -256,6 +256,16 @@ def menu(op):
             print("Debe ingresar al menos 2 AFNs con los que se puedan unir entre ellos")
         else:
             unionanlex()
+    elif op == 10:
+        if len(AFNs) < 1:
+            print("No se tiene ningun AFN guardado")
+        else:
+            print("Escoja el ID del AFN a eliminar")
+            imprimirAFNs()
+            id = leerID("Ingrese el ID (Para cancelar la operación, ingrese -1)\nID:", -1)
+            if id != -1:
+                del AFNs[id]
+                print("AFN con ID", id, " quitado de la lista")
     elif op == 0:
         print("(:")
         return
