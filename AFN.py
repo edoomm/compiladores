@@ -1,5 +1,6 @@
 from Estado import *
 from Transicion import *
+from io import open
 
 # Simulación clase SimbolosEspeciales
 EPSILON = chr(5)
@@ -472,7 +473,7 @@ class AFD(object):
     def __init__(self, afn=None):
         self._tabla = []
         self._afn = afn
-        if AFN != None:
+        if self._afn != None:
             self.constructor1(afn)
 
     def __str__(self):
@@ -482,6 +483,70 @@ class AFD(object):
                 tablastr += str(col) + "\t"
             tablastr += "\n"
         return tablastr
+
+    def exportarAFD(self,nombre):
+        filas=""
+        archivoTexto=open(nombre+".txt","w")
+        for fila in self.tabla:
+            for col in fila:
+                filas += str(col) + "\t"
+            filas += "\n"
+            archivoTexto.write(filas)
+            filas=""
+        archivoTexto.close()   
+    
+    #Algorigmo para importacion de AFD
+    def importarAFD(self,nombre):
+        archivoTexto=open(nombre+".txt","r") #abrimos el archivo txt y extraemos los datos por filas
+        lineas=archivoTexto.readlines()
+        archivoTexto.close()
+        linea=[]        #Generamos una lista la cual contendra cada cadena que necesitemos
+        linea.append("") 
+        i=0     
+        j=0
+        numTxt="" #string para guardar numeros
+        numeros="0123456789" #String que se ocupa para buscar numeros
+        for l in lineas:       #Se itera sobra cada una de las lineas que nos arrojo el txt
+            while i < len(l):   
+                """
+                    En esta parte del codigo se buscar limpiar la linea para solo insertar en la tabla
+                    los caracteres que necesitamos, por lo cual tiene que pasar por todas estas validaciones
+                """
+                if str(l[i]) != '\t' and str(l[i]) != " " :
+                    if l[i] == "-" and l[i+1]!="\t":
+                        j=i
+                        while l[j]!="\t":
+                            numTxt+=l[j]
+                            j+=1
+                        i=j-1
+                        linea.append(numTxt)
+                        j=0
+                        numTxt=""
+                    elif numeros.find(l[i]) != -1 and l[i-1]!="-": 
+                        j=i
+                        while str(l[j])!="\t":
+                            numTxt+=str(l[j])+""
+                            j+=1 
+                        i=j-1
+                        linea.append(numTxt)
+                        j=0
+                        numTxt=""
+                    elif l[i] == "E" and l[i+1]=="d":
+                        linea.append("Edo Acept")
+                        i=len(l)
+                    else:
+                       linea.append(l[i])
+                i+=1
+            """
+                Finalmente en esta seccion es donde se ingresa un Salto de linea y se inserta en la tabla cada linea ya valida
+            """
+            linea.append('\n')
+            self._tabla.append(linea)
+            linea=[]
+            i=0
+        
+
+
 
     ''' Atributos
     '''
@@ -529,7 +594,7 @@ class AFD(object):
         # Después se itera sobre ese primer estado con todos los símbolos del estado
         for c in afn.getAlfabeto():
             saux = afn.irA(sI[0], c)
-            if saux not in sI and len(saux) != 0:
+            if saux not in sI and len(saux) != 0: #verificas que el conjunto no esta en sI y que no este vacio
                 sI.append(saux)
                 fila.append(len(sI)-1)
             elif saux in sI:
@@ -542,7 +607,7 @@ class AFD(object):
         i = 1 # El índice irá de s1, s2, ..., sn
         l = len(sI) # La longitud que podrá ir cambiando si se agrega un nuevo estado
         while i != l:
-            fila = []
+            fila=[]
             fila.append(i)
             # Se itera sobre el alfabeto
             for c in afn.getAlfabeto():
@@ -593,12 +658,12 @@ f = AFN()
 f.crearAFNBasico(')')
 # Creación de D.D = [0-9]+ o (. o [0-9]+)?
 g = AFN()
-g.crearAFNBasico('0', '9')
+g.crearAFNBasico('0', '2')
 g.cerradurap()
 h = AFN()
 h.crearAFNBasico('.')
 i = AFN(1)
-i.crearAFNBasico('0', '9')
+i.crearAFNBasico('0', '2')
 i.cerradurap()
 h.concatenar(i)
 h.opcional()
@@ -609,7 +674,14 @@ analizador.union([a,b,c,d,e,f,g])
 # analizador.afn.imprimir()
 
 afd = AFD(afn=analizador.afn)
-print(afd)
+print("Digita el nombre del AFD: ")      
+afd.exportarAFD(input())
+
+afdDos=AFD()
+print("Digita el nombre del AFD: ")  
+afdDos.importarAFD(input())
+print(afdDos)
+
 
 # # PRUEBAS PARA CONVERSIÓN DE AFN A AFD
 # # creación de (a|b)+
