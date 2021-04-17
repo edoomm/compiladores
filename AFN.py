@@ -476,8 +476,12 @@ class AFD(object):
             self.constructor1(afn)
 
     def __str__(self):
-        # TODO: Implementar impresión de la tabla
-        return "Un AFD(:"
+        tablastr = ""
+        for fila in self.tabla:
+            for col in fila:
+                tablastr += str(col) + "\t"
+            tablastr += "\n"
+        return tablastr
 
     ''' Atributos
     '''
@@ -512,7 +516,7 @@ class AFD(object):
         self.tabla.append(header)
 
     def convertirAFN(self, afn):
-        """Convierte un AFN a un AFD. También implementa la representación de la forma tabulada del AFD
+        """Convierte un AFN a un AFD implementando la representación de la forma tabulada del AFD
 
         Args:
             afn (AFN): El AFN a convertir
@@ -521,6 +525,7 @@ class AFD(object):
         fila = [] # Lista auxiliar que representerá las filas de nuestra tabla
         # Se empieza con el estado inicial
         sI.append(afn.cerraduraEpsilon(afn.EdoIni)) # s0
+        fila.append(len(sI)-1) # ID del estado
         # Después se itera sobre ese primer estado con todos los símbolos del estado
         for c in afn.getAlfabeto():
             saux = afn.irA(sI[0], c)
@@ -538,6 +543,7 @@ class AFD(object):
         l = len(sI) # La longitud que podrá ir cambiando si se agrega un nuevo estado
         while i != l:
             fila = []
+            fila.append(i)
             # Se itera sobre el alfabeto
             for c in afn.getAlfabeto():
                 saux = afn.irA(sI[i], c)
@@ -553,9 +559,6 @@ class AFD(object):
             # Se actualiza longitud e indice
             l = len(sI)
             i += 1
-
-        print(len(sI))
-        print(self.tabla)
 
     def existeEdoAcept(self, cjto):
         """Determina si en un conjunto de estados existe un estado de aceptación
@@ -574,22 +577,56 @@ class AFD(object):
         return -1
         
 
-# PRUEBAS PARA CONVERSIÓN DE AFN A AFD
-# creación de (a|b)+
-a = AFN(1)
-a.crearAFNBasico('a')
-b = AFN(2)
-b.crearAFNBasico('b')
-a.unir(b)
-a.cerradurap()
-# creación de c*
-c = AFN(3)
-c.crearAFNBasico('c')
-c.cerradurak()
-# creación de (a|b)+ o c*
-a.concatenar(c)
-# a.imprimir()
-afd = AFD(a)
+# PRUEBAS PARA CONVERSIÓN DE AFN ESPECIAL A AFD
+# Creación de AFNs básicos
+a = AFN()
+a.crearAFNBasico('+')
+b = AFN()
+b.crearAFNBasico('-')
+c = AFN()
+c.crearAFNBasico('*')
+d = AFN()
+d.crearAFNBasico('/')
+e = AFN()
+e.crearAFNBasico('(')
+f = AFN()
+f.crearAFNBasico(')')
+# Creación de D.D = [0-9]+ o (. o [0-9]+)?
+g = AFN()
+g.crearAFNBasico('0', '9')
+g.cerradurap()
+h = AFN()
+h.crearAFNBasico('.')
+i = AFN(1)
+i.crearAFNBasico('0', '9')
+i.cerradurap()
+h.concatenar(i)
+h.opcional()
+g.concatenar(h)
+
+analizador = AnalizadorLexico()
+analizador.union([a,b,c,d,e,f,g])
+# analizador.afn.imprimir()
+
+afd = AFD(afn=analizador.afn)
+print(afd)
+
+# # PRUEBAS PARA CONVERSIÓN DE AFN A AFD
+# # creación de (a|b)+
+# a = AFN(1)
+# a.crearAFNBasico('a')
+# b = AFN(2)
+# b.crearAFNBasico('b')
+# a.unir(b)
+# a.cerradurap()
+# # creación de c*
+# c = AFN(3)
+# c.crearAFNBasico('c')
+# c.cerradurak()
+# # creación de (a|b)+ o c*
+# a.concatenar(c)
+# # a.imprimir()
+# afd = AFD(a)
 
 # # PRUEBAS PARA ANALIZADOR LÉXICO
 # a = AFN()
