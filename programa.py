@@ -43,6 +43,7 @@ def imprimirMenu():
     print("8) Convertir AFN a AFD")
     print("9) Analizar una cadena")
     print("10) Eliminar AFN de la lista de AFNs")
+    print("11) Mostrar AFNs y AFDs disponibles")
     print("\n0) Salir")
 
 def leerCaracter(msj):
@@ -87,7 +88,12 @@ def leerID(msj, end=None):
 def imprimirAFNs():
     """Imprime la lista de AFNs disponibles
     """
-    print(list(afns.keys()))
+    print(str(list(afns.keys())).replace('\'', ''))
+
+def imprimirAFDs():
+    """Imprime la lista de AFNs disponibles
+    """
+    print(str(list(afds.keys())).replace('\'', ''))
 
 def guardarAFN(afn):
     """Guarda en el diccionario de AFNs un AFN
@@ -271,6 +277,11 @@ def menu(op):
             if id != -1:
                 del afns[id]
                 print("AFN con ID", id, " quitado de la lista")
+    elif op == 11:
+        print("AFNs")
+        imprimirAFNs()
+        print("AFDs")
+        imprimirAFDs()
     elif op == 0:
         print("(:")
         return
