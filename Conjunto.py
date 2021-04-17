@@ -1,5 +1,7 @@
 from Transicion import *
-
+"""
+    Esta clase van a ser los Estados del AFD
+"""
 class Conjunto():
     
     
