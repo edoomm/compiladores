@@ -120,7 +120,7 @@ class AFN():
         # Se actualiza self
         self.EdosAcept = f.EdosAcept
         self.EdosAFN = self.EdosAFN | f.EdosAFN
-        self.Alfabeto = self.Alfabeto | f.getAlfabeto()
+        self.Alfabeto = self.Alfabeto | f.Alfabeto
 
     # OPCIÓN 4
     def cerradurap(self):
@@ -251,8 +251,13 @@ class AFN():
         C=set()
         edosAux=set()
         edosAux=self.moverAEdos(edos,simb)
-        for e in edosAux:
-            C.add(frozenset(self.cerraduraEpsilon(e)))
+        # Agregué esta linea, porque cuando es igual a 1 (la mayoría de veces), no tiene caso que sea un conjunto de conjuntos
+        if len(edosAux) == 1:
+            for e in edosAux:
+                C = frozenset(self.cerraduraEpsilon(e))
+        else:
+            for e in edosAux:
+                C.add(frozenset(self.cerraduraEpsilon(e)))
         return C
 
     def cerraduraEpsilon(self,edo):
@@ -325,7 +330,14 @@ class AFN():
         return a
 
     def getAlfabeto(self):
-        return self.Alfabeto
+        """Regresará el alfabeto en una lista ordenada
+
+        Returns:
+            list: Lista del Alfabeto ordenada
+        """
+        alf = list(self.Alfabeto)
+        alf.sort()
+        return alf
 
     def getEdosAFN(self):
         return self.EdosAFN
@@ -349,9 +361,12 @@ class AFN():
         self.EdosAFN.add(edo)
 
     def imprimirAFN(self):
+        print("Número de estados:", len(self.EdosAFN))
         for e in self.EdosAFN:
             if e.aceptacion:
                 print("Edo acept:", e)
+            elif self.EdoIni == e:
+                print("Edo ini:", e)
             else:
                 print(e)
     
@@ -448,6 +463,171 @@ class AnalizadorLexico(object):
         self.afn.EdosAFN.add(ei)
         self.afn.Alfabeto = alf
 
+class AFD(object):
+    """Clase para representar un Automata Finito Determinista
+
+    Args:
+        afn (AFN, optional): Un AFN que puede ser pasado para convertirlo automáticamente a AFN. Defaults to None.
+    """
+    def __init__(self, afn=None):
+        self._tabla = []
+        self._afn = afn
+        if AFN != None:
+            self.constructor1(afn)
+
+    def __str__(self):
+        tablastr = ""
+        for fila in self.tabla:
+            for col in fila:
+                tablastr += str(col) + "\t"
+            tablastr += "\n"
+        return tablastr
+
+    ''' Atributos
+    '''
+    @property
+    def afn(self):
+        return self._afn
+    @afn.setter
+    def afn(self, value):
+        self._afn = value
+    @property
+    def tabla(self):
+        return self._tabla
+    @tabla.setter
+    def tabla(self, value):
+        self._tabla = value
+
+    ''' Constructores
+    '''
+    def constructor1(self, afn):
+        self.inicializarTabla()
+        self.convertirAFN(afn)
+
+    ''' Métodos
+    '''
+    def inicializarTabla(self):
+        """Inicializa la tabla con la fila de los símbolos del alfabeto
+        """
+        header = self.afn.getAlfabeto().copy()
+        header.insert(0, '')
+        header.append("Edo Acept")
+
+        self.tabla.append(header)
+
+    def convertirAFN(self, afn):
+        """Convierte un AFN a un AFD implementando la representación de la forma tabulada del AFD
+
+        Args:
+            afn (AFN): El AFN a convertir
+        """
+        sI = [] # Representará las S_{i}. s0, s1, s2, ...
+        fila = [] # Lista auxiliar que representerá las filas de nuestra tabla
+        # Se empieza con el estado inicial
+        sI.append(afn.cerraduraEpsilon(afn.EdoIni)) # s0
+        fila.append(len(sI)-1) # ID del estado
+        # Después se itera sobre ese primer estado con todos los símbolos del estado
+        for c in afn.getAlfabeto():
+            saux = afn.irA(sI[0], c)
+            if saux not in sI and len(saux) != 0:
+                sI.append(saux)
+                fila.append(len(sI)-1)
+            elif saux in sI:
+                fila.append(sI.index(saux))
+            else:
+                fila.append(-1)
+        fila.append(self.existeEdoAcept(sI[0])) # Edo Acept
+        self.tabla.append(fila.copy())
+        # Y ahora se itera sobre los sI que salieron de la primer iteración
+        i = 1 # El índice irá de s1, s2, ..., sn
+        l = len(sI) # La longitud que podrá ir cambiando si se agrega un nuevo estado
+        while i != l:
+            fila = []
+            fila.append(i)
+            # Se itera sobre el alfabeto
+            for c in afn.getAlfabeto():
+                saux = afn.irA(sI[i], c)
+                if saux not in sI and len(saux) != 0:
+                    sI.append(saux)
+                    fila.append(len(sI)-1)
+                elif saux in sI:
+                    fila.append(sI.index(saux))
+                else:
+                    fila.append(-1)
+            fila.append(self.existeEdoAcept(sI[i]))
+            self.tabla.append(fila.copy())
+            # Se actualiza longitud e indice
+            l = len(sI)
+            i += 1
+
+    def existeEdoAcept(self, cjto):
+        """Determina si en un conjunto de estados existe un estado de aceptación
+
+        Args:
+            cjto (set): El conjunto de estados
+
+        Returns:
+            int: 1 en caso de ser estado de aceptación y no tener un token, si se tiene un token regresa el token, si no hay estados de aceptación, se regresa -1
+        """
+        for e in cjto:
+            if e.aceptacion and e.token == -1:
+                return 1
+            elif e.aceptacion and e.token != -1:
+                return e.token
+        return -1
+        
+
+# PRUEBAS PARA CONVERSIÓN DE AFN ESPECIAL A AFD
+# Creación de AFNs básicos
+a = AFN()
+a.crearAFNBasico('+')
+b = AFN()
+b.crearAFNBasico('-')
+c = AFN()
+c.crearAFNBasico('*')
+d = AFN()
+d.crearAFNBasico('/')
+e = AFN()
+e.crearAFNBasico('(')
+f = AFN()
+f.crearAFNBasico(')')
+# Creación de D.D = [0-9]+ o (. o [0-9]+)?
+g = AFN()
+g.crearAFNBasico('0', '9')
+g.cerradurap()
+h = AFN()
+h.crearAFNBasico('.')
+i = AFN(1)
+i.crearAFNBasico('0', '9')
+i.cerradurap()
+h.concatenar(i)
+h.opcional()
+g.concatenar(h)
+
+analizador = AnalizadorLexico()
+analizador.union([a,b,c,d,e,f,g])
+# analizador.afn.imprimir()
+
+afd = AFD(afn=analizador.afn)
+print(afd)
+
+# # PRUEBAS PARA CONVERSIÓN DE AFN A AFD
+# # creación de (a|b)+
+# a = AFN(1)
+# a.crearAFNBasico('a')
+# b = AFN(2)
+# b.crearAFNBasico('b')
+# a.unir(b)
+# a.cerradurap()
+# # creación de c*
+# c = AFN(3)
+# c.crearAFNBasico('c')
+# c.cerradurak()
+# # creación de (a|b)+ o c*
+# a.concatenar(c)
+# # a.imprimir()
+# afd = AFD(a)
+
 # # PRUEBAS PARA ANALIZADOR LÉXICO
 # a = AFN()
 # b = AFN()
@@ -464,18 +644,18 @@ class AnalizadorLexico(object):
 
 # # PRUEBAS PARA AFNs ([a-z] | [A-Z]) o ([a-z] | [A-Z] | [0-9])*
 # # Creación de ([a-z] | [A-Z])
-a = AFN()
-a.crearAFNBasico('a', 'z')
-b = AFN()
-b.crearAFNBasico('0', '9')
-a.unir(b)
-a.imprimir()
-print("-------")
-dD=set()
-dD=a.irA(a.getEdosAFN(),'7')
-for d in dD:
-    for e in d:
-        print(e)
+# a = AFN()
+# a.crearAFNBasico('a', 'z')
+# b = AFN()
+# b.crearAFNBasico('0', '9')
+# a.unir(b)
+# a.imprimir()
+# print("-------")
+# dD=set()
+# dD=a.irA(a.getEdosAFN(),'7')
+# for d in dD:
+#     for e in d:
+#         print(e)
 
 
 # # Creación de ([a-z] | [A-Z] | [0-9])*
