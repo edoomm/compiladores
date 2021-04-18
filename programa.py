@@ -5,6 +5,7 @@ idsAfns = 0 # Servirá para asignar IDs a los AFNs que vayan siendo creados
 afns = {} # Servirá para ir guardando los AFNs creados
 analizador = AnalizadorLexico()
 afds = {} # Guardará los AFDs
+idsAfds = 0 # Servirá para asignar IDs a los AFDs que vayan siendo creados
 
 def esperar(msj = None):
     """Muestra un mensaje de espera antes de pasar a una acción siguiente
@@ -124,6 +125,34 @@ def guardarAFN(afn):
         afn.idAFN = id
         afns[id] = afn
 
+def guardarAFD(afd):
+    """Guarda en el diccionario de AFDs un AFD
+
+    Args:
+        afd (AFD): El AFD a aguardar
+    """
+    id = input("Ingrese un ID para identificar el AFD creado\n(Si no ingresa nada, el AFD será guardado con un número)\nID: ")
+    if not id:
+        afds[idsAfds] = afd
+    else:
+        # Se verifica si el ID es un número y si también no ya existe en los IDs
+        try:
+            idnum = int(id)
+            if idnum < 0:
+                print("No se puede usar un ID negativo, vuelva a intentar con otro ID")
+                guardarAFD(afd)
+                return
+            else:
+                id = idnum
+        except:
+            pass
+        if id in afds.keys():
+            print("El ID ingresado ya existe, vuelva a intentar con otro ID")
+            guardarAFD(afd)
+            return
+        
+        afds[id] = afd
+
 # Opción 1
 def crearAfnBasico():
     """Opción del menú para que el usuario pueda crear un AFN básico
@@ -138,8 +167,6 @@ def crearAfnBasico():
     global idsAfns
     a = AFN(idsAfns)
     a.crearAFNBasico(s1, s2)
-
-    print("AFN con ID", a.idAFN, "creado con éxito")
     idsAfns += 1
 
     guardarAFN(a)
@@ -219,8 +246,17 @@ def unionanlex():
         print("Analizador léxico creado correctamente")
 
 # Opción 8
-def conversion():
-    pass
+def conversion(afn):
+    """Se realiza la conversión de AFN a AFD que se guardará en un nuevo AFD
+
+    Args:
+        afn (AFN): El AFN a convertir a AFD
+    """
+    a = AFD(afn)
+    # Se guarda
+    global idsAfds
+    idsAfds += 1
+    guardarAFD(a)
 
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
@@ -260,7 +296,7 @@ def menu(op):
             elif op == 6:
                 opcionalAFN(id)
             elif op == 8:
-                # TODO: Conversión de AFN a AFD
+                conversion(afns[id])
                 pass
     elif op == 7:
         if len(afns) < 2:
