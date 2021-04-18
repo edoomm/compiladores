@@ -461,6 +461,63 @@ class AnalizadorLexico(object):
         self.afn.EdosAFN.add(ei)
         self.afn.Alfabeto = alf
 
+    
+    def AnanalizarCadena(self,cadena,tablaAFD):
+        EdoAct=1
+        b=None #Bandera que nos indica si previamente pasamos por un edo Actual
+        tr=""
+        j=0
+        i=0
+        listaToken=[]
+        posicionTrans=0
+        posicionAcept=0
+        token=""
+
+        if len(cadena)==1:
+            return 0;
+
+        while i < len(cadena):
+
+            
+            if cadena[i] in tablaAFD[0]:
+                while j < len(tablaAFD[0]) :
+                   if cadena[i]==tablaAFD[0][j]:
+                       posicionTrans=int(tablaAFD[EdoAct][j])
+                       
+               j+=1
+            
+            
+            if posicionTrans != -1:
+                EdoAct=posicionTrans + 1
+                i+=1
+
+                if tablaAFD[EdoAct][len(tablaAFD[EdoAct])-1] != -1 :
+                    b=True
+                    posicionAcept=i
+                    listaToken.append(tablaAFD[EdoAct][len(tablaAFD[EdoAct])-1])
+            else:
+                if b is False:
+                    EdoAct=0
+                else:
+                    i=posicionAcept+1
+
+
+
+
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
 # # PRUEBAS PARA CONVERSIÓN DE AFN A AFD
 # # creación de (a|b)+
 # a = AFN(1)
