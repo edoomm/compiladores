@@ -233,17 +233,21 @@ def unionanlex():
     id = 0
     while id != -1:
         print("AFNs escogidos:\n", lst)
-        print("Escoja un ID de los AFNs disponibles (termine con '-1'):")
+        print("Escoja un ID de los AFNs disponibles (termine con -1):")
         imprimirAFNs()
-        id = leerID("ID: ", "-1")
+        id = leerID("ID: ", -1)
         if id == -1:
             break
         lst.append(id)
         lst = list(set(lst)) # Remueve duplicados
 
     # Se unen y crean el analizador léxico
-    if analizador.union([afns[i] for i in lst]) != None:
-        print("Analizador léxico creado correctamente")
+    analizador.union([afns[i] for i in lst])
+    if analizador.afn != None:
+        print("Unión especial realizada correctamente")
+        guardarAFN(copy.deepcopy(analizador.afn))
+    else:
+        print("No se pudo realizar la unión especial")
 
 # Opción 8
 def conversion(afn):
@@ -332,7 +336,11 @@ def main():
     op = -1
     while op != 0:
         imprimirMenu()
-        op = int(input("Su opción: "))
-        menu(op)
+        try:
+            op = int(input("Su opción: "))
+            menu(op)
+        except:
+            error("Opción no valida, vuelva a intentarlo...")
+            esperar()
 
 main()
