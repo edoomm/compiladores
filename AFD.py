@@ -123,7 +123,8 @@ class AFD(object):
             filas += "\n"
             archivoTexto.write(filas)
             filas=""
-        archivoTexto.close()   
+        archivoTexto.close()  
+
     
     #Algorigmo para importacion de AFD
     def importarAFD(self,nombre):
@@ -142,7 +143,7 @@ class AFD(object):
                     En esta parte del codigo se buscar limpiar la linea para solo insertar en la tabla
                     los caracteres que necesitamos, por lo cual tiene que pasar por todas estas validaciones
                 """
-                if str(l[i]) != '\t' and str(l[i]) != " " :
+                if str(l[i]) != '\t' and str(l[i]) != " " and str(l[i])!= "\n":
                     if l[i] == "-" and l[i+1]!="\t":
                         j=i
                         while l[j]!="\t":
@@ -170,7 +171,7 @@ class AFD(object):
             """
                 Finalmente en esta seccion es donde se ingresa un Salto de linea y se inserta en la tabla cada linea ya valida
             """
-            linea.append('\n')
+            
             self._tabla.append(linea)
             linea=[]
             i=0
