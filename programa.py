@@ -43,8 +43,10 @@ def imprimirMenu():
     print("7) Unión especial")
     print("8) Convertir AFN a AFD")
     print("9) Analizar una cadena")
-    print("10) Eliminar AFN de la lista de AFNs")
-    print("11) Mostrar AFNs y AFDs disponibles")
+    print("10) Mostrar AFNs y AFDs disponibles")
+    print("11) Imprimir AFD")
+    print("12) Eliminar AFN de la lista de AFNs")
+    print("13) Eliminar AFD de la lista de AFDs")
     print("\n0) Salir")
 
 def leerCaracter(msj):
@@ -62,12 +64,13 @@ def leerCaracter(msj):
     
     return s[0]
 
-def leerID(msj, end=None):
+def leerID(msj, end=None, afs=afns):
     """Lee un ID valido de la lista de AFNs que se tiene
 
     Args:
         msj (str): El mensaje que se despliega en la función input()
         end (str, optional): El caracter con el que puede terminar la lectura de un ID. Defaults to None
+        afs (AFN|AFD, optional): Puede leer el ID del diccionario de afns o afds. Defaults to afns
 
     Returns:
         int: El ID valido
@@ -80,7 +83,7 @@ def leerID(msj, end=None):
     except:
         pass
 
-    if id not in afns.keys():
+    if id not in afs.keys():
         print("ID no valido, vuelva a intentarlo")
         return leerID(msj)
 
@@ -262,6 +265,39 @@ def conversion(afn):
     idsAfds += 1
     guardarAFD(a)
 
+# Opción 9
+# TODO
+
+# Opción 10
+def imprimirAFs():
+    """Imprime los Autómatas Finitos, tanto deterministas como no deterministas que se han creado a lo largo del programa
+    """
+    print("AFNs")
+    imprimirAFNs()
+    print("AFDs")
+    imprimirAFDs()
+
+# Opción 11
+def imprimirAFD():
+    """Imprime un AFD del diccionario de AFDs. (Operación cancelable)
+    """
+    print("AFDs")
+    imprimirAFDs()
+    id = leerID("Escoja el ID del AFD a imprimir (cancele con -1): ", end=-1, afs=afds)
+    if id != -1:
+        print(afds[id])
+
+# Opción 12
+def eliminarAFN():
+    """Da la opción de elimnar un AFN del diccionario de AFNs creados
+    """
+    print("Escoja el ID del AFN a eliminar")
+    imprimirAFNs()
+    id = leerID("Ingrese el ID (Para cancelar la operación, ingrese -1)\nID:", -1)
+    if id != -1:
+        del afns[id]
+        print("AFN con ID", id, " quitado de la lista")
+
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
 
@@ -307,21 +343,21 @@ def menu(op):
             print("Debe ingresar al menos 2 AFNs con los que se puedan unir entre ellos")
         else:
             unionanlex()
+    elif op == 9:
+        # TODO: Analizar una cadena
+        pass
     elif op == 10:
+        imprimirAFs()
+    elif op == 11:
+        if len(afds) < 1:
+            print("No se ha creado ningún AFD")
+        else:
+            imprimirAFD()
+    elif op == 12:
         if len(afns) < 1:
             print("No se tiene ningun AFN guardado")
         else:
-            print("Escoja el ID del AFN a eliminar")
-            imprimirAFNs()
-            id = leerID("Ingrese el ID (Para cancelar la operación, ingrese -1)\nID:", -1)
-            if id != -1:
-                del afns[id]
-                print("AFN con ID", id, " quitado de la lista")
-    elif op == 11:
-        print("AFNs")
-        imprimirAFNs()
-        print("AFDs")
-        imprimirAFDs()
+            eliminarAFN()
     elif op == 0:
         print("(:")
         return
