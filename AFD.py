@@ -214,4 +214,10 @@ afd.exportarAFD(input())
 afdDos=AFD()
 print("Digita el nombre del AFD: ")  
 afdDos.importarAFD(input())
-print(afdDos)
+#print(afdDos)
+
+
+l=analizador.AnanalizarCadena("123.45+20*30(12)",AFD.tabla)
+
+for e in l:
+    print(e)

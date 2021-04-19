@@ -474,17 +474,16 @@ class AnalizadorLexico(object):
         token=""
 
         if len(cadena)==1:
-            return 0;
+           return 0;
 
         while i < len(cadena):
-
-            
-            if cadena[i] in tablaAFD[0]:
+  
+            if str(cadena.index(i)) in str(tablaAFD.index(0)):
                 while j < len(tablaAFD[0]) :
                    if cadena[i]==tablaAFD[0][j]:
                        posicionTrans=int(tablaAFD[EdoAct][j])
                        
-               j+=1
+                j+=1
             
             
             if posicionTrans != -1:
@@ -492,20 +491,24 @@ class AnalizadorLexico(object):
                 i+=1
 
                 if tablaAFD[EdoAct][len(tablaAFD[EdoAct])-1] != -1 :
-                    b=True
-                    posicionAcept=i
-                    listaToken.append(tablaAFD[EdoAct][len(tablaAFD[EdoAct])-1])
+                   b=True
+                   posicionAcept=i
+                   listaToken.append(tablaAFD[EdoAct][len(tablaAFD[EdoAct])-1])
             else:
                 if b is False:
                     EdoAct=0
                 else:
                     i=posicionAcept+1
 
+        return listaToken
 
 
 
 
-                
+
+
+
+
 
 
 
