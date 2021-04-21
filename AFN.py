@@ -384,26 +384,6 @@ class AFN():
         self.imprimirAFN()
         self.imprimirTransiciones()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # # PRUEBAS PARA CONVERSIÓN DE AFN A AFD
 # # creación de (a|b)+
 # a = AFN(1)

@@ -1,6 +1,4 @@
-
 from AFN import *
-
 
 class AnalizadorLexico(object):
     """
@@ -21,9 +19,7 @@ class AnalizadorLexico(object):
         self.IndiceCaracterActual=0
         self.caracterActual=""
         self.EdoTransicion=0
-        
-
-    
+   
     def __str__(self):
         self.afn.imprimir()
         strtokens = "Tokens: "
@@ -174,28 +170,7 @@ class AnalizadorLexico(object):
         while self.IndiceCaracterActual<len(self.CadenaSigma):
             self.yylex()
             print("\n",self.Lexema," Token:",self.token)
-
-
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+ 
 """    
     
     
