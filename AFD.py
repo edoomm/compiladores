@@ -1,4 +1,4 @@
-from AFN import *
+from AnalizadorLexico import *
 from io import open
 
 class AFD(object):
@@ -44,6 +44,10 @@ class AFD(object):
 
     ''' Métodos
     '''
+    def getTablaAFD(self):
+        return self._tabla
+
+
     def inicializarTabla(self):
         """Inicializa la tabla con la fila de los símbolos del alfabeto
         """
@@ -215,9 +219,5 @@ afdDos=AFD()
 print("Digita el nombre del AFD: ")  
 afdDos.importarAFD(input())
 #print(afdDos)
-
-
-l=analizador.AnanalizarCadena("123.45+20*30(12)",AFD.tabla)
-
-for e in l:
-    print(e)
+analizador.setCadenAndTabla("123+4*2(3)",afdDos)
+analizador.analizarCadena()
