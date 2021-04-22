@@ -1,4 +1,4 @@
-from AnalizadorLexico import *
+from AFN import *
 from io import open
 
 class AFD(object):
@@ -128,8 +128,7 @@ class AFD(object):
             archivoTexto.write(filas)
             filas=""
         archivoTexto.close()  
-
-    
+ 
     #Algorigmo para importacion de AFD
     def importarAFD(self,nombre):
         archivoTexto=open(nombre+".txt","r") #abrimos el archivo txt y extraemos los datos por filas
@@ -182,48 +181,48 @@ class AFD(object):
 
 # # PRUEBAS PARA CONVERSIÓN DE AFN ESPECIAL A AFD
 # # Creación de AFNs básicos
-a = AFN()
-a.crearAFNBasico('+')
-b = AFN()
-b.crearAFNBasico('-')
-c = AFN()
-c.crearAFNBasico('*')
-d = AFN()
-d.crearAFNBasico('/')
-e = AFN()
-e.crearAFNBasico('(')
-f = AFN()
-f.crearAFNBasico(')')
-# Creación de D.D = [0-9]+ o (. o [0-9]+)?
-g = AFN()
-g.crearAFNBasico('0', '9')
-g.cerradurap()
-h = AFN()
-h.crearAFNBasico('.')
-i = AFN(1)
-i.crearAFNBasico('0', '9')
-i.cerradurap()
-h.concatenar(i)
-h.opcional()
-g.concatenar(h)
+# a = AFN()
+# a.crearAFNBasico('+')
+# b = AFN()
+# b.crearAFNBasico('-')
+# c = AFN()
+# c.crearAFNBasico('*')
+# d = AFN()
+# d.crearAFNBasico('/')
+# e = AFN()
+# e.crearAFNBasico('(')
+# f = AFN()
+# f.crearAFNBasico(')')
+# # Creación de D.D = [0-9]+ o (. o [0-9]+)?
+# g = AFN()
+# g.crearAFNBasico('0', '9')
+# g.cerradurap()
+# h = AFN()
+# h.crearAFNBasico('.')
+# i = AFN(1)
+# i.crearAFNBasico('0', '9')
+# i.cerradurap()
+# h.concatenar(i)
+# h.opcional()
+# g.concatenar(h)
 
-analizador = AnalizadorLexico()
-analizador.union([a,b,c,d,e,f,g])
-# # analizador.afn.imprimir()
+# analizador = AnalizadorLexico()
+# analizador.union([a,b,c,d,e,f,g])
+# # # analizador.afn.imprimir()
 
-# afd = AFD(afn=analizador.afn)
-# print("Digita el nombre del AFD: ")      
-# afd.exportarAFD(input())
+# # afd = AFD(afn=analizador.afn)
+# # print("Digita el nombre del AFD: ")      
+# # afd.exportarAFD(input())
 
-afdDos=AFD(afn=analizador.afn)
-# print("Digita el nombre del AFD: ")  
-# afdDos.importarAFD(input())
-#print(afdDos)
-# analizador.setCadenAndTabla("123+4*2(3)",afdDos)
+# afdDos=AFD(afn=analizador.afn)
+# # print("Digita el nombre del AFD: ")  
+# # afdDos.importarAFD(input())
+# #print(afdDos)
+# # analizador.setCadenAndTabla("123+4*2(3)",afdDos)
+# # analizador.analizarCadena()
+# print("--------------")
+# analizador.setCadenAndTabla("123+1234a*2",afdDos)
 # analizador.analizarCadena()
-print("--------------")
-analizador.setCadenAndTabla("123+1234a*2",afdDos)
-analizador.analizarCadena()
 # analizador.setCadenAndTabla("123+4*2(3)",afdDos)
 # analizador.analizarCadena()
 # analizador.setCadenAndTabla("123+4*2(3)",afdDos)

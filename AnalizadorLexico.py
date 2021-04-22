@@ -1,10 +1,10 @@
-from AFN import *
+from AFD import *
 
 class AnalizadorLexico(object):
     """
         Representa un analizador léxico que se construye a partir de AFNs
     """
-    def __init__(self):
+    def __init__(self, archivo = None):
         self._afn = AFN()
         self.CadenaSigma=None #cadena
         self.tablaAFD=None#tablaAFD
@@ -19,6 +19,9 @@ class AnalizadorLexico(object):
         self.IndiceCaracterActual=0
         self.caracterActual=""
         self.EdoTransicion=0
+        self._archivo = archivo
+        if archivo != None:
+            self.importar(archivo)
    
     def __str__(self):
         self.afn.imprimir()
@@ -41,10 +44,17 @@ class AnalizadorLexico(object):
     @afn.setter
     def afn(self, value):
         self._afn = value
-    
-    def setCadenAndTabla(self,cadena,afd):
-        self.CadenaSigma=cadena
-        self.tablaAFD=afd.getTablaAFD()
+    @property
+    def archivo(self):
+        """El nombre del archivo de donde se obtuvo la tabla AFD
+
+        Returns:
+            str: Nombre del archivo
+        """
+        return self._archivo
+    @archivo.setter
+    def archivo(self, value):
+        self._archivo = value
 
     ''' Métodos
     '''
@@ -93,7 +103,10 @@ class AnalizadorLexico(object):
         self.afn.EdosAFN.add(ei)
         self.afn.Alfabeto = alf
 
-    
+    def setCadenAndTabla(self,cadena,afd):
+        self.CadenaSigma=cadena
+        self.tablaAFD=afd.getTablaAFD()
+
     def yylex(self):
         banderaCaracter=0
         j=0
@@ -114,7 +127,7 @@ class AnalizadorLexico(object):
 
         for t in self.tablaAFD:
             tam=len(t)
-            
+
         while i < len(self.CadenaSigma):
             # print("Indice Caracter Actual:", self.IndiceCaracterActual, "; Lexema:", self.Lexema, "; IniLexema:", self.Inilexema, "; FinLexema: ", self.finLexema, "; CadenaSigma: ", self.CadenaSigma)
             #print("Dist",self.finLexema,self.IndiceCaracterActual)
@@ -159,5 +172,30 @@ class AnalizadorLexico(object):
     def analizarCadena(self):
         while self.IndiceCaracterActual<len(self.CadenaSigma):
             self.yylex()
-            print("\n",self.Lexema," Token:",self.token)
- 
+            print(self.Lexema," Token:",self.token)
+        
+        self.resetattributes()
+
+    def importar(self, file):
+        """Importa y guarda el nombre de un archivo que contiene un AFD
+
+        Args:
+            file (str): El nombre del archivo
+        """
+        a = AFD()
+        a.importarAFD(file)
+        self.tablaAFD = a.tabla
+
+    def resetattributes(self):
+        """Resetea los atributos utilizados para el análisis de una cadena en la función yylex
+        """
+        self.Inilexema=0
+        self.EdoActual=0
+        self.PasoPorEdoAcept=False
+        self.finLexema=0
+        self.token=0
+        self.pila=[]
+        self.Lexema=""
+        self.IndiceCaracterActual=0
+        self.caracterActual=""
+        self.EdoTransicion=0

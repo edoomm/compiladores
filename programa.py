@@ -1,4 +1,4 @@
-from AFD import *
+from AnalizadorLexico import *
 import copy
 
 idsAfns = 0 # Servirá para asignar IDs a los AFNs que vayan siendo creados
@@ -154,6 +154,22 @@ def guardarAFD(afd):
         
         afds[id] = afd
 
+def leerarchivo():
+    """Lee el nombre de un archivo que será el AFD que utilizará el Analizador Léxico
+
+    Returns:
+        bool: False - Si no se pudo leer correctamente el archivo
+    """
+    global analizador
+    aux = analizador
+    try:
+        aux = AnalizadorLexico(input("Ingrese el nombre del archivo de donde se obtendrá el AFD que el analizador léxico utilizará:\n"))
+    except:
+        print("No se pudo crear el analizador léxico correctamente. Intentelo nuevamente o con un archivo diferente")
+        return False
+    
+    analizador = aux
+
 # Opción 1
 def crearAfnBasico():
     """Opción del menú para que el usuario pueda crear un AFN básico
@@ -264,7 +280,23 @@ def conversion(afn):
     guardarAFD(a)
 
 # Opción 9
-# TODO
+def analizarcad():
+    global analizador
+    if analizador.archivo == None:
+        if leerarchivo() == False:
+            return
+    else:
+        print("Archivo que se está utilizando para analizar cadenas:", analizador.archivo + ".txt")
+        # newfile = input("Si quiere cambiar a un archivo diferente, escriba el nombre del archivo (Si da ENTER sin teclear nada se seguirá usando el mismo archivo):\n")
+        # if newfile:
+        #     if leerarchivo() == False:
+        #         print("Se usará el archivo", analizador.archivo, "para el analisis")
+    
+    analizador.CadenaSigma = input("Ingrese la cadena a analizar: ")
+    print("INICIO DEL ANÁLISIS\n-----")
+    analizador.analizarCadena()
+    print("-----\nFIN DEL ANÁLISIS")
+    
 
 # Opción 10
 def imprimirAFNSyAFDs():
@@ -342,8 +374,7 @@ def menu(op):
         else:
             unionanlex()
     elif op == 9:
-        # TODO: Analizar una cadena
-        pass
+        analizarcad()
     elif op == 10:
         imprimirAFNSyAFDs()
     elif op == 11:
