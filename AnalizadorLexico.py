@@ -114,25 +114,21 @@ class AnalizadorLexico(object):
 
         for t in self.tablaAFD:
             tam=len(t)
-        
-
+            
         while i < len(self.CadenaSigma):
+            # print("Indice Caracter Actual:", self.IndiceCaracterActual, "; Lexema:", self.Lexema, "; IniLexema:", self.Inilexema, "; FinLexema: ", self.finLexema, "; CadenaSigma: ", self.CadenaSigma)
             #print("Dist",self.finLexema,self.IndiceCaracterActual)
             self.caracterActual=self.CadenaSigma[self.IndiceCaracterActual]
             #print(self.caracterActual)
             #print(self.caracterActual) 
             banderaCaracter=0
 
-
             while j < tam : #len(self.tablaAFD[0])
-
                 if self.caracterActual==self.tablaAFD[0][j]:
                     banderaCaracter=1
                     self.EdoTransicion=int(self.tablaAFD[self.EdoActual+1][j])
                     #print(self.EdoTransicion)
-                 
                 j+=1
-
             j=0
 
             if self.EdoTransicion != -1 and self.EdoTransicion != None:
@@ -140,8 +136,6 @@ class AnalizadorLexico(object):
                    self.PasoPorEdoAcept=True
                    self.token=self.tablaAFD[self.EdoTransicion+1][tam-1]
                    self.finLexema=self.IndiceCaracterActual
-                   
-
                 self.IndiceCaracterActual+=1
                 i+=1
                 self.EdoActual=self.EdoTransicion
@@ -149,68 +143,21 @@ class AnalizadorLexico(object):
                 i=len(self.CadenaSigma)
             
         if self.PasoPorEdoAcept is False or banderaCaracter==0:
-
             self.IndiceCaracterActual=self.Inilexema+1
             self.Lexema=self.CadenaSigma[self.Inilexema:1]
             self.token="ERROR"
        
-        
         if self.Inilexema!=self.finLexema:
-            self.Lexema=self.CadenaSigma[self.Inilexema:self.finLexema-self.Inilexema+1]
+            self.Lexema = self.CadenaSigma[self.Inilexema:self.finLexema+1]
         else:
+            # print("2!")
             self.Lexema=self.CadenaSigma[self.Inilexema] 
         #print(self.Lexema,self.Inilexema,self.finLexema,self.IndiceCaracterActual)
         self.IndiceCaracterActual=self.finLexema+1
         return self.token
 
-
-
     def analizarCadena(self):
-
         while self.IndiceCaracterActual<len(self.CadenaSigma):
             self.yylex()
             print("\n",self.Lexema," Token:",self.token)
  
-"""    
-    
-    
-    def AnanalizarCadena(self,cadena,tablaAFD):
-        EdoAct=1
-        b=None #Bandera que nos indica si previamente pasamos por un edo Actual
-        tr=""
-        j=0
-        i=0
-        listaToken=[]
-        posicionTrans=0
-        posicionAcept=0
-        token=""
-
-        if len(cadena)==1:
-           return 0;
-
-        while i < len(cadena):
-  
-            if str(cadena.index(i)) in str(tablaAFD.index(0)):
-                while j < len(tablaAFD[0]) :
-                   if cadena[i]==tablaAFD[0][j]:
-                       posicionTrans=int(tablaAFD[EdoAct][j])
-                       
-                j+=1
-            
-            
-            if posicionTrans != -1:
-                EdoAct=posicionTrans + 1
-                i+=1
-
-                if tablaAFD[EdoAct][len(tablaAFD[EdoAct])-1] != -1 :
-                   b=True
-                   posicionAcept=i
-                   listaToken.append(tablaAFD[EdoAct][len(tablaAFD[EdoAct])-1])
-            else:
-                if b is False:
-                    EdoAct=0
-                else:
-                    i=posicionAcept+1
-
-        return listaToken
-"""
