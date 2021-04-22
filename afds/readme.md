@@ -4,7 +4,7 @@ Directorio donde se podrán guardar algunos ejemplos de *Autómatas Finitos Dete
 Estos son guardados en archivos con extensión "txt" y tienen el formato de archivos "[tsv](https://en.wikipedia.org/wiki/Tab-separated_values)" con el que se puede ver la representación del AFD de forma tabulada
 
 ## Ejemplo
-[num.txt](num.txt) guarda el siguiente autómata, en el que se puede ver representado de forma tabulada el AFD
+[enum.txt](enum.txt) guarda el siguiente autómata, en el que se puede ver representado de forma tabulada el AFD
 ```
 	(	)	*	+	-	.	/	0	1	2	3	4	5	6	7	8	9	Edo Acept	
 0	1	2	3	4	5	-1	6	7	7	7	7	7	7	7	7	7	7	-1	
