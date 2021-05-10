@@ -112,7 +112,7 @@ class AnalizadorLexico(object):
         j=0
         numTrans=0
         tam=0
-        self.pila.insert(0,self.IndiceCaracterActual)
+        #self.pila.insert(0,self.IndiceCaracterActual)
         #print(self.tablaAFD)
         if self.IndiceCaracterActual >= len(self.CadenaSigma):
            self.Lexema=""
@@ -127,9 +127,9 @@ class AnalizadorLexico(object):
 
         for t in self.tablaAFD:
             tam=len(t)
+        
 
         while i < len(self.CadenaSigma):
-            # print("Indice Caracter Actual:", self.IndiceCaracterActual, "; Lexema:", self.Lexema, "; IniLexema:", self.Inilexema, "; FinLexema: ", self.finLexema, "; CadenaSigma: ", self.CadenaSigma)
             #print("Dist",self.finLexema,self.IndiceCaracterActual)
             self.caracterActual=self.CadenaSigma[self.IndiceCaracterActual]
             #print(self.caracterActual)
@@ -137,44 +137,67 @@ class AnalizadorLexico(object):
             banderaCaracter=0
 
             while j < tam : #len(self.tablaAFD[0])
+
                 if self.caracterActual==self.tablaAFD[0][j]:
                     banderaCaracter=1
                     self.EdoTransicion=int(self.tablaAFD[self.EdoActual+1][j])
                     #print(self.EdoTransicion)
+                 
                 j+=1
+            if banderaCaracter==0:
+                i=len(self.CadenaSigma)+1
             j=0
 
-            if self.EdoTransicion != -1 and self.EdoTransicion != None:
+            if self.EdoTransicion != -1 and self.EdoTransicion != None and banderaCaracter!=0:
                 if self.tablaAFD[self.EdoTransicion+1][tam-1]!='-1': #self.tablaAFD[self.EdoActual])
                    self.PasoPorEdoAcept=True
                    self.token=self.tablaAFD[self.EdoTransicion+1][tam-1]
                    self.finLexema=self.IndiceCaracterActual
+                   
+
                 self.IndiceCaracterActual+=1
                 i+=1
                 self.EdoActual=self.EdoTransicion
             else:
-                i=len(self.CadenaSigma)
+                i=len(self.CadenaSigma)+1
             
         if self.PasoPorEdoAcept is False or banderaCaracter==0:
+            
+            if len(self.CadenaSigma)==1:
+                self.token="ERROR"
+                self.IndiceCaracterActual=len(self.CadenaSigma)
+                self.Lexema=self.CadenaSigma[0]
+                return self.token
             self.IndiceCaracterActual=self.Inilexema+1
-            self.Lexema=self.CadenaSigma[self.Inilexema:1]
+            self.Lexema=self.CadenaSigma[self.Inilexema]
             self.token="ERROR"
-       
-        if self.Inilexema!=self.finLexema:
-            self.Lexema = self.CadenaSigma[self.Inilexema:self.finLexema+1]
+        #print("p",self.Lexema,self.Inilexema,self.finLexema,self.IndiceCaracterActual)
+        if self.Inilexema!=self.finLexema and banderaCaracter!=0:
+            self.Lexema=self.CadenaSigma[self.Inilexema:self.finLexema+1]
         else:
-            # print("2!")
-            self.Lexema=self.CadenaSigma[self.Inilexema] 
+            if banderaCaracter!=0:
+                self.Lexema=self.CadenaSigma[self.Inilexema] 
         #print(self.Lexema,self.Inilexema,self.finLexema,self.IndiceCaracterActual)
-        self.IndiceCaracterActual=self.finLexema+1
+        if banderaCaracter!=0:
+            self.IndiceCaracterActual=self.finLexema+1
         return self.token
 
     def analizarCadena(self):
+        tokenlocal=""
         while self.IndiceCaracterActual<len(self.CadenaSigma):
-            self.yylex()
-            print(self.Lexema," Token:",self.token)
+            tokenlocal=self.yylex()
+            print("\n",self.Lexema," Token:",tokenlocal)
         
         self.resetattributes()
+	    
+
+    def analizarCadena2(self):
+        tokenlocal=""
+
+        while tokenlocal!=EPSILON:
+            tokenlocal=self.yylex()
+            if tokenlocal !=EPSILON:
+                print("\n",self.Lexema," Token:",tokenlocal)
 
     def importar(self, file):
         """Importa y guarda el nombre de un archivo que contiene un AFD
