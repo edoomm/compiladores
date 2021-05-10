@@ -128,7 +128,6 @@ class AnalizadorLexico(object):
         for t in self.tablaAFD:
             tam=len(t)
         
-
         while i < len(self.CadenaSigma):
             #print("Dist",self.finLexema,self.IndiceCaracterActual)
             self.caracterActual=self.CadenaSigma[self.IndiceCaracterActual]
@@ -187,12 +186,8 @@ class AnalizadorLexico(object):
         while self.IndiceCaracterActual<len(self.CadenaSigma):
             tokenlocal=self.yylex()
             print("\n",self.Lexema," Token:",tokenlocal)
-        
-        self.resetattributes()
-	    
 
-    def analizarCadena2(self):
-        tokenlocal=""
+        self.resetattributes()
 
         while tokenlocal!=EPSILON:
             tokenlocal=self.yylex()

@@ -1,4 +1,4 @@
-from AnalizadorLexico import *
+from evaluadorcalc import *
 import copy
 
 idsAfns = 0 # Servirá para asignar IDs a los AFNs que vayan siendo creados
@@ -29,10 +29,21 @@ def error(msj = None):
     else:
         print("ERROR:", msj)
 
-def imprimirMenu():
-    """Imprime el menú del programa principal
+def imprimirmenu():
+    """Imprime el menú principal del programa
     """
-    print("Menu")
+    print("\n\n\n\n\n\n\n\n\n\n\nMenú principal")
+    print("--------------")
+    print("1) AFNs")
+    print("2) Analizador sintáctico")
+
+    print("\n0) Salir")
+
+def imprimirMenuAfns():
+    """Imprime el menú de las operaciones que se pueden realizar con AFNs.
+    Corresponde a la entrega del primer parcial
+    """
+    print("Menu AFNs")
     print("---------------")
     print("1) Crear AFN básico")
     print("2) Unir AFNs")
@@ -296,7 +307,6 @@ def analizarcad():
     print("INICIO DEL ANÁLISIS\n-----")
     analizador.analizarCadena()
     print("-----\nFIN DEL ANÁLISIS")
-    
 
 # Opción 10
 def imprimirAFNSyAFDs():
@@ -328,8 +338,8 @@ def eliminarAF(afs=afns):
         del afs[id]
         print("AFN con ID", id, " quitado de la lista")
 
-def menu(op):
-    """Función que sirve para esocger la acción que el usuario desea realizar
+def menuafns(op):
+    """Función que sirve para esocger la acción que el usuario desea realizar en el Menu correspondiente a los AFNs
 
     Args:
         op (int): La opción escojida por el usuario
@@ -393,19 +403,40 @@ def menu(op):
         else:
             eliminarAF(afds)
     elif op == 0:
-        print("(:")
+        print("Regresando a menú principal(:")
         return
     else:
         error("Opción no valida. Vuelva a intentarlo")
-
+    
     esperar()
+
+def menu(op):
+    """Función que sirve para esocger la acción que el usuario desea realizar
+
+    Args:
+        op (int): La opción escojida por el usuario
+    """
+    while op != 0:
+        if op == 1:
+            imprimirMenuAfns()
+            try:
+                op = int(input("Su opción:"))
+                menuafns(op)
+            except:
+                error("Opción no valida, vuelva a intentarlo...")
+        elif op == 0:
+            print("(:")
+        else:
+            error("Opción no valida, vuelva a intentarlo...")
+            return
+
 
 def main():
     """Función principal que hace correr el programa
     """
     op = -1
     while op != 0:
-        imprimirMenu()
+        imprimirmenu()
         try:
             op = int(input("Su opción: "))
             menu(op)
