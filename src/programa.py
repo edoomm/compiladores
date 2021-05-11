@@ -39,27 +39,6 @@ def imprimirmenu():
 
     print("\n0) Salir")
 
-def imprimirMenuAfns():
-    """Imprime el menú de las operaciones que se pueden realizar con AFNs.
-    Corresponde a la entrega del primer parcial
-    """
-    print("Menu AFNs")
-    print("---------------")
-    print("1) Crear AFN básico")
-    print("2) Unir AFNs")
-    print("3) Concatenar AFNs")
-    print("4) Cerradura positiva")
-    print("5) Cerradura de Kleene")
-    print("6) Opcional")
-    print("7) Unión especial")
-    print("8) Convertir AFN a AFD")
-    print("9) Analizar una cadena")
-    print("10) Mostrar AFNs y AFDs disponibles")
-    print("11) Imprimir AFD")
-    print("12) Eliminar AFN de la lista de AFNs")
-    print("13) Eliminar AFD de la lista de AFDs")
-    print("\n0) Salir")
-
 def leerCaracter(msj):
     """Lee un caracter. Si el usuario ingresa una cadena, solo se tomará en cuenta el primer caracter de la cadena
 
@@ -181,7 +160,29 @@ def leerarchivo():
     
     analizador = aux
 
-# Opción 1
+### Menu AFNs
+def imprimirMenuAfns():
+    """Imprime el menú de las operaciones que se pueden realizar con AFNs.
+    Corresponde a la entrega del primer parcial
+    """
+    print("Menu AFNs")
+    print("---------------")
+    print("1) Crear AFN básico")
+    print("2) Unir AFNs")
+    print("3) Concatenar AFNs")
+    print("4) Cerradura positiva")
+    print("5) Cerradura de Kleene")
+    print("6) Opcional")
+    print("7) Unión especial")
+    print("8) Convertir AFN a AFD")
+    print("9) Analizar una cadena")
+    print("10) Mostrar AFNs y AFDs disponibles")
+    print("11) Imprimir AFD")
+    print("12) Eliminar AFN de la lista de AFNs")
+    print("13) Eliminar AFD de la lista de AFDs")
+    print("\n0) Salir")
+
+## Opción 1
 def crearAfnBasico():
     """Opción del menú para que el usuario pueda crear un AFN básico
     """
@@ -199,7 +200,7 @@ def crearAfnBasico():
 
     guardarAFN(a)
 
-# Opción 2
+## Opción 2
 def unirAFNs(id1, id2):
     """Une a través de 2 IDs dados de AFNs a el primer AFN
 
@@ -211,7 +212,7 @@ def unirAFNs(id1, id2):
     afns[id1].unir(aux)
     print("Unión guardada en AFN con ID", id1)
 
-# Opción 3
+## Opción 3
 def concatenarAFNs(id1, id2):
     """Concatena 2 AFNs en un AFN
 
@@ -223,7 +224,7 @@ def concatenarAFNs(id1, id2):
     afns[id1].concatenar(aux)
     print("Concatenación guardada en AFN con ID", id1)
 
-# Opción 4
+## Opción 4
 def cerradurapositivaAFN(id):
     """Cerradura positiva de un AFN
 
@@ -233,7 +234,7 @@ def cerradurapositivaAFN(id):
     afns[id].cerradurap()
     print("Cerradura positiva hecha con éxito a AFN con ID", id)
 
-# Opción 5
+## Opción 5
 def cerradurakleneeAFN(id):
     """Cerradura Kleene de un AFN
 
@@ -243,7 +244,7 @@ def cerradurakleneeAFN(id):
     afns[id].cerradurak()
     print("Cerradura Kleene hecha con éxito a AFN con ID", id)
 
-# Opción 6
+## Opción 6
 def opcionalAFN(id):
     """Opcional de un AFN. Operación '?' de un AFN
 
@@ -253,7 +254,7 @@ def opcionalAFN(id):
     afns[id].opcional()
     print("Opcional hecho con éxito a AFN con ID", id)
 
-# Opción 7
+## Opción 7
 def unionanlex():
     """Realiza la construcción del analizador léxico a través de la unión de diferentes AFNs
     """
@@ -277,7 +278,7 @@ def unionanlex():
     else:
         print("No se pudo realizar la unión especial")
 
-# Opción 8
+## Opción 8
 def conversion(afn):
     """Se realiza la conversión de AFN a AFD que se guardará en un nuevo AFD
 
@@ -290,7 +291,7 @@ def conversion(afn):
     idsAfds += 1
     guardarAFD(a)
 
-# Opción 9
+## Opción 9
 def analizarcad():
     global analizador
     if analizador.archivo == None:
@@ -298,17 +299,17 @@ def analizarcad():
             return
     else:
         print("Archivo que se está utilizando para analizar cadenas:", analizador.archivo + ".txt")
-        # newfile = input("Si quiere cambiar a un archivo diferente, escriba el nombre del archivo (Si da ENTER sin teclear nada se seguirá usando el mismo archivo):\n")
-        # if newfile:
-        #     if leerarchivo() == False:
-        #         print("Se usará el archivo", analizador.archivo, "para el analisis")
+        newfile = input("Si quiere cambiar a un archivo diferente, escriba el nombre del archivo (Si da ENTER sin teclear nada se seguirá usando el mismo archivo):\n")
+        if newfile:
+            if leerarchivo() == False:
+                print("Se usará el archivo", analizador.archivo, "para el analisis")
     
     analizador.CadenaSigma = input("Ingrese la cadena a analizar: ")
     print("INICIO DEL ANÁLISIS\n-----")
     analizador.analizarCadena()
     print("-----\nFIN DEL ANÁLISIS")
 
-# Opción 10
+## Opción 10
 def imprimirAFNSyAFDs():
     """Imprime los Autómatas Finitos, tanto deterministas como no deterministas que se han creado a lo largo del programa
     """
@@ -317,7 +318,7 @@ def imprimirAFNSyAFDs():
     print("AFDs")
     imprimirAFs(afds)
 
-# Opción 11
+## Opción 11
 def imprimirAFD():
     """Imprime un AFD del diccionario de AFDs. (Operación cancelable)
     """
@@ -327,7 +328,7 @@ def imprimirAFD():
     if id != -1:
         print(afds[id])
 
-# Opción 12 y 13
+## Opción 12 y 13
 def eliminarAF(afs=afns):
     """Da la opción de elimnar un AFN del diccionario de AFNs creados
     """
@@ -410,6 +411,49 @@ def menuafns(op):
     
     esperar()
 
+### Menu Analizador léxico
+def imprimirMenuAnSintactico():
+    """Imprime el menú correspondiente a los analizadores sintácticos implementados
+    """
+    print("Menú Analizadores sintácticos")
+    print("-----------------------------")
+    print("1) Calculadora")
+    print("\n0) Salir")
+
+def menuansyn(op):
+    """Función que sirve para esocger la acción que el usuario desea realizar en el Menu correspondiente a los AFNs
+
+    Args:
+        op (int): La opción escojida por el usuario
+    """
+    if op == 1:
+        evaluarcalc()
+    else:
+        error("Opción no valida. Vuelva a intentarlo")
+    esperar()
+
+## Calculadora
+def evaluarcalc():
+    """Evalua a través de un AFD una expresión numérica a ingresar
+    """
+    global analizador
+    if analizador.archivo == None:
+        if leerarchivo() == False:
+            return
+    else:
+        print("Archivo que se está utilizando para analizar cadenas:", analizador.archivo + ".txt")
+        newfile = input("Si quiere cambiar a un archivo diferente, escriba el nombre del archivo (Si da ENTER sin teclear nada se seguirá usando el mismo archivo):\n")
+        if newfile:
+            if leerarchivo() == False:
+                print("Se usará el archivo", analizador.archivo, "para el analisis")
+    
+    analizador.CadenaSigma = input("Ingrese la expresión a evaluar: ")
+    ansyntax = Evaluador(analizador)
+    if ansyntax.inieval():
+        print("Expresión sintácticamente correcta.\nResultado:", ansyntax.result)
+    else:
+        print("Expresión sintácticamente INCORRECTA")
+
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
 
@@ -424,24 +468,31 @@ def menu(op):
                 menuafns(op)
             except:
                 error("Opción no valida, vuelva a intentarlo...")
+        elif op == 2:
+            imprimirMenuAnSintactico()
+            try:
+                op = int(input("Su opción:"))
+                menuansyn(op)
+            except:
+                error("Opción no valida, vuelva a intentarlo...")
         elif op == 0:
             print("(:")
         else:
             error("Opción no valida, vuelva a intentarlo...")
             return
 
-
 def main():
     """Función principal que hace correr el programa
     """
-    op = -1
-    while op != 0:
-        imprimirmenu()
-        try:
-            op = int(input("Su opción: "))
-            menu(op)
-        except:
-            error("Opción no valida, vuelva a intentarlo...")
-            esperar()
+    # op = -1
+    # while op != 0:
+    #     imprimirmenu()
+    #     try:
+    #         op = int(input("Su opción: "))
+    #         menu(op)
+    #     except:
+    #         error("Opción no valida, vuelva a intentarlo...")
+    #         esperar()
+    evaluarcalc()
 
 main()

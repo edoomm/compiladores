@@ -3,19 +3,12 @@
 from AnalizadorLexico import *
 
 class Evaluador(object):
-    def __init__(self, sigma: str, anlex: AnalizadorLexico):
-        self._sigma = sigma
+    def __init__(self, anlex: AnalizadorLexico):
         self._anlex = anlex
         self._result = None
 
     ''' Atributos
     '''
-    @property
-    def sigma(self):
-        return self._sigma
-    @sigma.setter
-    def sigma(self, value):
-        self._sigma = value
     @property
     def anlex(self):
         """El analizador léxico que contendrá la tabla AFD
@@ -62,7 +55,7 @@ class Evaluador(object):
                 if (self.Ep(v)):
                     return True
             return False
-        # self.anlex.undotoken()
+        self.anlex.undotoken()
         return True
 
     def T(self, v):
@@ -81,7 +74,7 @@ class Evaluador(object):
                 if self.Tp(v):
                     return True
             return False
-        # self.anlex.undotoken()
+        self.anlex.undotoken()
         return True
 
     def F(self, v):

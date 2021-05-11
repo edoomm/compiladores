@@ -112,7 +112,7 @@ class AnalizadorLexico(object):
         j=0
         numTrans=0
         tam=0
-        #self.pila.insert(0,self.IndiceCaracterActual)
+        self.pila.insert(0,self.IndiceCaracterActual)
         #print(self.tablaAFD)
         if self.IndiceCaracterActual >= len(self.CadenaSigma):
            self.Lexema=""
@@ -185,14 +185,9 @@ class AnalizadorLexico(object):
         tokenlocal=""
         while self.IndiceCaracterActual<len(self.CadenaSigma):
             tokenlocal=self.yylex()
-            print("\n",self.Lexema," Token:",tokenlocal)
+            print(self.Lexema," Token:",tokenlocal)
 
         self.resetattributes()
-
-        while tokenlocal!=EPSILON:
-            tokenlocal=self.yylex()
-            if tokenlocal !=EPSILON:
-                print("\n",self.Lexema," Token:",tokenlocal)
 
     def importar(self, file):
         """Importa y guarda el nombre de un archivo que contiene un AFD
@@ -217,3 +212,9 @@ class AnalizadorLexico(object):
         self.IndiceCaracterActual=0
         self.caracterActual=""
         self.EdoTransicion=0
+
+    def undotoken(self):
+        if len(self.pila) == 0:
+            return False
+        self.IndiceCaracterActual = self.pila.pop(0)
+        return True
