@@ -1,4 +1,5 @@
-from AFD import *
+from AFN import *
+
 
 class AnalizadorLexico(object):
     """
@@ -160,13 +161,7 @@ class AnalizadorLexico(object):
             else:
                 i=len(self.CadenaSigma)+1
             
-        if self.PasoPorEdoAcept is False or banderaCaracter==0:
-            
-            if len(self.CadenaSigma)==1:
-                self.token="ERROR"
-                self.IndiceCaracterActual=len(self.CadenaSigma)
-                self.Lexema=self.CadenaSigma[0]
-                return self.token
+        if self.PasoPorEdoAcept is False and banderaCaracter==0:
             self.IndiceCaracterActual=self.Inilexema+1
             self.Lexema=self.CadenaSigma[self.Inilexema]
             self.token="ERROR"
@@ -177,8 +172,15 @@ class AnalizadorLexico(object):
             if banderaCaracter!=0:
                 self.Lexema=self.CadenaSigma[self.Inilexema] 
         #print(self.Lexema,self.Inilexema,self.finLexema,self.IndiceCaracterActual)
-        if banderaCaracter!=0:
+        if banderaCaracter!=0 :
             self.IndiceCaracterActual=self.finLexema+1
+        
+        if self.PasoPorEdoAcept is True and banderaCaracter==0:
+            if self.Inilexema!=self.finLexema:
+                self.Lexema=self.CadenaSigma[self.Inilexema:self.finLexema+1]
+            else:
+                self.Lexema=self.CadenaSigma[self.Inilexema]
+                
         return self.token
 
     def analizarCadena(self):
@@ -218,3 +220,5 @@ class AnalizadorLexico(object):
             return False
         self.IndiceCaracterActual = self.pila.pop(0)
         return True
+
+    

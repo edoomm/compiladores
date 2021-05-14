@@ -1,5 +1,6 @@
-from AFN import *
+from AnalizadorLexico import *
 from io import open
+
 
 class AFD(object):
     """Clase para representar un Automata Finito Determinista
@@ -178,6 +179,47 @@ class AFD(object):
             self._tabla.append(linea)
             linea=[]
             i=0
+
+
+a = AFN()
+a.crearAFNBasico('+')
+b = AFN()
+b.crearAFNBasico('-')
+c = AFN()
+c.crearAFNBasico('*')
+d = AFN()
+d.crearAFNBasico('/')
+e = AFN()
+e.crearAFNBasico('(')
+f = AFN()
+f.crearAFNBasico(')')
+# Creación de D.D = [0-9]+ o (. o [0-9]+)?
+g = AFN()
+g.crearAFNBasico('0', '9')
+g.cerradurap()
+h = AFN()
+h.crearAFNBasico('.')
+i = AFN(1)
+i.crearAFNBasico('0', '9')
+i.cerradurap()
+h.concatenar(i)
+h.opcional()
+g.concatenar(h)
+
+analizador = AnalizadorLexico()
+analizador.union([a,b,c,d,e,f,g])
+# analizador.afn.imprimir()
+
+afd = AFD(afn=analizador.afn)
+print("Digita el nombre del AFD: ")      
+afd.exportarAFD(input())
+
+afdDos=AFD()
+print("Digita el nombre del AFD: ")  
+afdDos.importarAFD(input())
+#print(afdDos)
+analizador.setCadenAndTabla("123.+4*%+7234",afdDos)
+analizador.analizarCadena()
 
 # # PRUEBAS PARA CONVERSIÓN DE AFN ESPECIAL A AFD
 # # Creación de AFNs básicos
