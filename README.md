@@ -6,8 +6,19 @@ Actualmente el proyecto puede realizar la creación de **AFNs** *(Autómatas Fin
 
 ## Todo
 - [x] Integración de analizador léxico al programa principal
-- [ ] Revisión de errores en analizador léxico
-- [ ] Construcción de analizador léxico
+- [x] Revisión de errores en analizador léxico
+- [ ] Construcción de analizador sintáctico
   - [ ] Calculadora
-  - [ ] Notación Post-Fija
-  - [ ] Evaluador de expresiones
+    - [ ] Notación Post-Fija
+    - [x] Evaluador de expresiones
+  - [ ] [Construir AFN asociado a *Expresiones Regulares*](https://drive.google.com/file/d/1nMw-Tmyvoyn0qH-aouC0-bm3Lay4z5UF/view)
+    - [ ] Implementación con símbolos especiales (\\*, \\+, \\?, ...)
+  - [ ] [Gramática de gramáticas](https://drive.google.com/file/d/1mlB4ACLrKcQ8D-cdlvT9GMHLGt77AhMO/view)
+    - [ ] Analizadores léxico y sintáctico para gramáticas de gramáticas
+    - [ ] Operación Firt & Follow
+    - [ ] Construcción de la tabla LL(1)
+    - [ ] Analizador léxico para la gramática de entrada
+    - [ ] Algoritmo de analisis sintáctico LL(1)
+    - [ ] Tabla LL(1)
+    - [ ] Salida: True ó False
+    - (Los analizadores léxicos deberán ser guardados en el directorio *afds/*)
