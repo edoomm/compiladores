@@ -493,6 +493,7 @@ def main():
     #     except:
     #         error("Opción no valida, vuelva a intentarlo...")
     #         esperar()
-    evaluarcalc()
+    # evaluarcalc()
+    analizarcad()
 
 main()

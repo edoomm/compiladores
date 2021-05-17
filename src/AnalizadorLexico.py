@@ -1,4 +1,4 @@
-from AFN import *
+from AFD import *
 
 
 class AnalizadorLexico(object):
