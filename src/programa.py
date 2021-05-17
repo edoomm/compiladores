@@ -448,6 +448,7 @@ def evaluarcalc():
                 print("Se usará el archivo", analizador.archivo, "para el analisis")
     
     analizador.CadenaSigma = input("Ingrese la expresión a evaluar: ")
+    analizador.resetattributes()
     ansyntax = Evaluador(analizador)
     if ansyntax.inieval():
         print("Expresión sintácticamente correcta.\nResultado:", ansyntax.result)
@@ -484,16 +485,20 @@ def menu(op):
 def main():
     """Función principal que hace correr el programa
     """
-    # op = -1
-    # while op != 0:
-    #     imprimirmenu()
-    #     try:
-    #         op = int(input("Su opción: "))
-    #         menu(op)
-    #     except:
-    #         error("Opción no valida, vuelva a intentarlo...")
-    #         esperar()
-    # evaluarcalc()
-    analizarcad()
+    op = -1
+    while op != 0:
+        # imprimirmenu()
+        print("num) Evaluar expresión")
+        print("0) Salir")
+        try:
+            op = int(input("Su opción: "))
+            if op == 0:
+                return
+            evaluarcalc()
+            # menu(op)
+        except:
+            error("Opción no valida, vuelva a intentarlo...")
+            esperar()
+    # analizarcad()
 
 main()

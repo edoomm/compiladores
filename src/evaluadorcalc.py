@@ -34,7 +34,7 @@ class Evaluador(object):
         ref = [v]
         if (self.E(ref)):
             if (self.anlex.yylex() == EPSILON):
-                self.result = v
+                self.result = ref[0]
                 return True
         return False
 
@@ -48,10 +48,10 @@ class Evaluador(object):
         v2 = float(0)
         token = self.anlex.yylex()
         # + ó -
-        if token == 10 or token == 20:
+        if token == str(10) or token == str(20):
             ref = [v2]
             if (self.T(ref)):
-                v[0] = v[0] + (ref[0] if token == 10 else -ref[0])
+                v[0] = v[0] + (ref[0] if token == str(10) else -ref[0])
                 if (self.Ep(v)):
                     return True
             return False
@@ -67,10 +67,11 @@ class Evaluador(object):
     def Tp(self, v):
         v2 = float(0)
         token = self.anlex.yylex()
-        if token == 40 or token == 50:
+        # + ó -
+        if token == str(30) or token == str(40):
             ref = [v2]
             if self.F(ref):
-                v[0] = v[0] * (ref[0] if token == 30 else 1/ref[0])
+                v[0] = v[0] * (ref[0] if token == str(30) else 1/ref[0])
                 if self.Tp(v):
                     return True
             return False
@@ -79,14 +80,14 @@ class Evaluador(object):
 
     def F(self, v):
         token = self.anlex.yylex()
-        if token == 50:
+        if token == str(50): # parentesis izquierdo
             if (self.E(v)):
                 token = self.anlex.yylex()
-                if token == 70:
+                if token == str(60): # parentesis derecho
                     return True
             return False
-        elif token == 10:
-            v[0] = float(self.anlex.lexema)
+        elif token == str(70): # num
+            v[0] = float(self.anlex.Lexema)
             return True
         
         return False
