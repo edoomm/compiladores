@@ -8,8 +8,8 @@ Actualmente el proyecto puede realizar la creación de **AFNs** *(Autómatas Fin
 - [x] Integración de analizador léxico al programa principal
 - [x] Revisión de errores en analizador léxico
 - [ ] Construcción de analizador sintáctico
-  - [ ] Calculadora
-    - [ ] Notación Post-Fija
+  - [x] Calculadora
+    - [x] Notación Post-Fija
     - [x] Evaluador de expresiones
   - [ ] [Construir AFN asociado a *Expresiones Regulares*](https://drive.google.com/file/d/1nMw-Tmyvoyn0qH-aouC0-bm3Lay4z5UF/view)
     - [ ] Implementación con símbolos especiales (\\*, \\+, \\?, ...)
