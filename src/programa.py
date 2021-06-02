@@ -1,4 +1,4 @@
-from evaluadorcalc import *
+from convertidorPostfijo import *
 import copy
 
 idsAfns = 0 # Servirá para asignar IDs a los AFNs que vayan siendo creados
@@ -32,7 +32,11 @@ def error(msj = None):
 def imprimirmenu():
     """Imprime el menú principal del programa
     """
-    print("\n\n\n\n\n\n\n\n\n\n\nMenú principal")
+    linebreak = "\n"
+    for i in range(0, 8):
+        linebreak += "\n"
+    print(linebreak)
+    print("Menú principal")
     print("--------------")
     print("1) AFNs")
     print("2) Analizador sintáctico")
@@ -405,7 +409,7 @@ def menuafns(op):
             eliminarAF(afds)
     elif op == 0:
         print("Regresando a menú principal(:")
-        return
+        return False
     else:
         error("Opción no valida. Vuelva a intentarlo")
     
@@ -415,9 +419,14 @@ def menuafns(op):
 def imprimirMenuAnSintactico():
     """Imprime el menú correspondiente a los analizadores sintácticos implementados
     """
+    linebreak = "\n"
+    for i in range(0, 8):
+        linebreak += "\n"
+    print(linebreak)
     print("Menú Analizadores sintácticos")
     print("-----------------------------")
-    print("1) Calculadora")
+    print("1) Evaluar expresión numérica")
+    print("2) Convertidor post-fijo")
     print("\n0) Salir")
 
 def menuansyn(op):
@@ -428,6 +437,9 @@ def menuansyn(op):
     """
     if op == 1:
         evaluarcalc()
+    elif op == 0:
+        print("Regresando a menu principal(:")
+        return False
     else:
         error("Opción no valida. Vuelva a intentarlo")
     esperar()
@@ -461,23 +473,27 @@ def menu(op):
     Args:
         op (int): La opción escojida por el usuario
     """
-    while op != 0:
-        if op == 1:
+    op1 = op
+    exited = True if op1 == 0 else False
+    while not exited:
+        if op1 == 1:
             imprimirMenuAfns()
             try:
-                op = int(input("Su opción:"))
-                menuafns(op)
+                op2 = int(input("Su opción:"))
+                if menuafns(op2) == False:
+                    exited = True
             except:
                 error("Opción no valida, vuelva a intentarlo...")
-        elif op == 2:
+        elif op1 == 2:
             imprimirMenuAnSintactico()
             try:
-                op = int(input("Su opción:"))
-                menuansyn(op)
+                op2 = int(input("Su opción:"))
+                if menuansyn(op2) == False:
+                    exited = True
             except:
                 error("Opción no valida, vuelva a intentarlo...")
-        elif op == 0:
-            print("(:")
+        elif op1 == 0:
+            exited = True
         else:
             error("Opción no valida, vuelva a intentarlo...")
             return
@@ -487,15 +503,13 @@ def main():
     """
     op = -1
     while op != 0:
-        # imprimirmenu()
-        print("num) Evaluar expresión")
-        print("0) Salir")
+        imprimirmenu()
         try:
             op = int(input("Su opción: "))
             if op == 0:
+                print("(:")
                 return
-            evaluarcalc()
-            # menu(op)
+            menu(op)
         except:
             error("Opción no valida, vuelva a intentarlo...")
             esperar()
