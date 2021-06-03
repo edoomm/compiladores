@@ -164,6 +164,21 @@ def leerarchivo():
     
     analizador = aux
 
+def setanalizador():
+    """Establece el analizador léxico que deberá usar el programa
+    """
+    global analizador
+    if analizador.archivo == None:
+        if leerarchivo() == False:
+            return False
+    else:
+        print("Archivo que se está utilizando para analizar cadenas:", analizador.archivo + ".txt")
+        newfile = input("Si quiere cambiar a un archivo diferente, escriba el nombre del archivo (Si da ENTER sin teclear nada se seguirá usando el mismo archivo):\n")
+        if newfile:
+            if leerarchivo() == False:
+                print("Se usará el archivo", analizador.archivo, "para el analisis")
+    return True
+
 ### Menu AFNs
 def imprimirMenuAfns():
     """Imprime el menú de las operaciones que se pueden realizar con AFNs.
@@ -297,16 +312,7 @@ def conversion(afn):
 
 ## Opción 9
 def analizarcad():
-    global analizador
-    if analizador.archivo == None:
-        if leerarchivo() == False:
-            return
-    else:
-        print("Archivo que se está utilizando para analizar cadenas:", analizador.archivo + ".txt")
-        newfile = input("Si quiere cambiar a un archivo diferente, escriba el nombre del archivo (Si da ENTER sin teclear nada se seguirá usando el mismo archivo):\n")
-        if newfile:
-            if leerarchivo() == False:
-                print("Se usará el archivo", analizador.archivo, "para el analisis")
+    setanalizador()
     
     analizador.CadenaSigma = input("Ingrese la cadena a analizar: ")
     print("INICIO DEL ANÁLISIS\n-----")
@@ -415,7 +421,7 @@ def menuafns(op):
     
     esperar()
 
-### Menu Analizador léxico
+### Menu Analizador Sintáctico
 def imprimirMenuAnSintactico():
     """Imprime el menú correspondiente a los analizadores sintácticos implementados
     """
@@ -437,6 +443,8 @@ def menuansyn(op):
     """
     if op == 1:
         evaluarcalc()
+    elif op == 2:
+        convpostfijo()
     elif op == 0:
         print("Regresando a menu principal(:")
         return False
@@ -448,16 +456,8 @@ def menuansyn(op):
 def evaluarcalc():
     """Evalua a través de un AFD una expresión numérica a ingresar
     """
-    global analizador
-    if analizador.archivo == None:
-        if leerarchivo() == False:
-            return
-    else:
-        print("Archivo que se está utilizando para analizar cadenas:", analizador.archivo + ".txt")
-        newfile = input("Si quiere cambiar a un archivo diferente, escriba el nombre del archivo (Si da ENTER sin teclear nada se seguirá usando el mismo archivo):\n")
-        if newfile:
-            if leerarchivo() == False:
-                print("Se usará el archivo", analizador.archivo, "para el analisis")
+    if setanalizador() == False:
+        return
     
     analizador.CadenaSigma = input("Ingrese la expresión a evaluar: ")
     analizador.resetattributes()
@@ -466,6 +466,22 @@ def evaluarcalc():
         print("Expresión sintácticamente correcta.\nResultado:", ansyntax.result)
     else:
         print("Expresión sintácticamente INCORRECTA")
+
+## Notación post-fija
+def convpostfijo():
+    """Convierte una expresión numérica a su equivalente en notación post-fija
+    """
+    if setanalizador() == False:
+        return
+
+    analizador.CadenaSigma = input("Ingrese la expresión a evaluar: ")
+    analizador.resetattributes()
+    ansyntax = convertidorPostfijo(analizador)
+    if ansyntax.ConvPostfijo():
+        print("Expresión sintácticamente correcta.\nResultado:", ansyntax.getCadenaPost())
+    else:
+        print("Expresión sintácticamente INCORRECTA")
+
 
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
