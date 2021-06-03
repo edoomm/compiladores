@@ -44,7 +44,7 @@ def imprimirmenu():
     print("\n0) Salir")
 
 def leerCaracter(msj):
-    """Lee un caracter. Si el usuario ingresa una cadena, solo se tomará en cuenta el primer caracter de la cadena
+    """Lee un caracter. (Si el usuario ingresa una cadena, solo se tomará en cuenta el primer caracter de la cadena)
 
     Args:
         msj (str): Mensaje adicional a agregar al error
@@ -52,11 +52,11 @@ def leerCaracter(msj):
     Returns:
         chr: El caracter leido
     """
-    s = input(msj)
-    if len(s) > 1:
-        print("Solo se tomará el primer caracter de su cadena")
+    return input(msj)
+    # if len(s) > 1:
+    #     print("Solo se tomará el primer caracter de su cadena")
     
-    return s[0]
+    # return s[0]
 
 def leerID(msj, end=None, afs=afns):
     """Lee un ID valido de la lista de AFNs que se tiene
@@ -199,6 +199,7 @@ def imprimirMenuAfns():
     print("11) Imprimir AFD")
     print("12) Eliminar AFN de la lista de AFNs")
     print("13) Eliminar AFD de la lista de AFDs")
+    print("14) Exportar AFD")
     print("\n0) Salir")
 
 ## Opción 1
@@ -208,9 +209,10 @@ def crearAfnBasico():
     s1 = leerCaracter("Ingrese el simbolo inferior: ")
     s2 = leerCaracter("Ingrese el simbolo superior: ")
 
-    if ord(s1) > ord(s2):
-        error("En la lectura de los caractéres. El caracter inferior es superior al caracter superior")
-        return
+    if len(s1) == 1 and len(s2) == 1:
+        if ord(s1) > ord(s2):
+            error("En la lectura de los caractéres. El caracter inferior es superior al caracter superior")
+            return
 
     global idsAfns
     a = AFN(idsAfns)
@@ -413,6 +415,9 @@ def menuafns(op):
             print("No se tiene ningun AFD guardado")
         else:
             eliminarAF(afds)
+    elif op == 14:
+        # TODO: Exportar AFD
+        pass
     elif op == 0:
         print("Regresando a menú principal(:")
         return False
@@ -482,7 +487,6 @@ def convpostfijo():
     else:
         print("Expresión sintácticamente INCORRECTA")
 
-
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
 
@@ -495,7 +499,7 @@ def menu(op):
         if op1 == 1:
             imprimirMenuAfns()
             try:
-                op2 = int(input("Su opción:"))
+                op2 = int(input("Su opción: "))
                 if menuafns(op2) == False:
                     exited = True
             except:

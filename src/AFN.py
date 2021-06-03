@@ -30,10 +30,11 @@ class AFN():
             simbolo (chr): El caracter (inferior) principal que irá en el AFN
             s2 (chr, optional): El caracter superior. Defaults to None.
         """
+        isonechar = True if (len(simbolo) == 1) else False
         # Se valida primero s2
         simbolo2 = simbolo
         # Esto simula la sobreescritura del método
-        if s2 != None:
+        if s2 != None and isonechar:
             if ord(simbolo) < ord(s2):
                 # Si todo es valido entonces
                 simbolo2 = s2
@@ -55,8 +56,11 @@ class AFN():
         e1.setTransicion(t)
 
         # Se actualiza el alfabeto
-        for i in range(ord(simbolo), ord(simbolo2) + 1):
-            self.Alfabeto.add(chr(i))
+        if isonechar:
+            for i in range(ord(simbolo), ord(simbolo2) + 1):
+                self.Alfabeto.add(chr(i))
+        else:
+            self.Alfabeto.add(simbolo)
 
         self.EdoIni=e1
         self.setEdosAFN(e1)
