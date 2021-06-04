@@ -1,5 +1,7 @@
 from convertidorPostfijo import *
 import copy
+import traceback
+import sys
 
 idsAfns = 0 # Servirá para asignar IDs a los AFNs que vayan siendo creados
 afns = {} # Servirá para ir guardando los AFNs creados
@@ -179,6 +181,16 @@ def setanalizador():
                 print("Se usará el archivo", analizador.archivo, "para el analisis")
     return True
 
+def obteneridAFD() -> int:
+    """Obtiene de la lista de AFDs el ID que el usuario quiera utilizar
+
+    Returns:
+        int: El ID del AFD
+    """
+    print("AFDs")
+    imprimirAFs(afds)
+    return leerID("Escoja el ID del AFD a imprimir (cancele con -1): ", end=-1, afs=afds)
+
 ### Menu AFNs
 def imprimirMenuAfns():
     """Imprime el menú de las operaciones que se pueden realizar con AFNs.
@@ -334,9 +346,7 @@ def imprimirAFNSyAFDs():
 def imprimirAFD():
     """Imprime un AFD del diccionario de AFDs. (Operación cancelable)
     """
-    print("AFDs")
-    imprimirAFs(afds)
-    id = leerID("Escoja el ID del AFD a imprimir (cancele con -1): ", end=-1, afs=afds)
+    id = obteneridAFD()
     if id != -1:
         print(afds[id])
 
@@ -350,6 +360,18 @@ def eliminarAF(afs=afns):
     if id != -1:
         del afs[id]
         print("AFN con ID", id, " quitado de la lista")
+
+## Opción 14
+def expafd():
+    """Exporta un AFD que se haya creado a un archivo txt
+    """
+    id = obteneridAFD()
+    if id != -1:
+        try:
+            afds[id].exportarAFD(input("Ingrese el nombre del archivo donde se guardará el AFD: "))
+            print("AFD exportado correctamente")
+        except:
+            print("No se pudo exportar el AFD")
 
 def menuafns(op):
     """Función que sirve para esocger la acción que el usuario desea realizar en el Menu correspondiente a los AFNs
@@ -416,8 +438,10 @@ def menuafns(op):
         else:
             eliminarAF(afds)
     elif op == 14:
-        # TODO: Exportar AFD
-        pass
+        if len(afds) < 1:
+            print("No se tiene ningún AFD guardado")
+        else:
+            expafd()
     elif op == 0:
         print("Regresando a menú principal(:")
         return False
@@ -502,8 +526,15 @@ def menu(op):
                 op2 = int(input("Su opción: "))
                 if menuafns(op2) == False:
                     exited = True
-            except:
+            except Exception:
                 error("Opción no valida, vuelva a intentarlo...")
+                try:
+                    exc_info = sys.exc_info()
+                finally:
+                    # Display the *original* exception
+                    traceback.print_exception(*exc_info)
+                    del exc_info
+                    esperar()
         elif op1 == 2:
             imprimirMenuAnSintactico()
             try:
@@ -531,7 +562,7 @@ def main():
                 return
             menu(op)
         except:
-            error("Opción no valida, vuelva a intentarlo...")
+            error("Opción invalida, vuelva a intentarlo...")
             esperar()
     # analizarcad()
 

@@ -119,9 +119,15 @@ class AFD(object):
                 return e.token
         return -1
 
-    def exportarAFD(self,nombre):
+    def exportarAFD(self,nombre,extension="txt"):
+        """Crea un archivo con una extensión dada donde se guardará el AFD en su forma tabulada
+
+        Args:
+            nombre (str): El nombre del archivo
+            extension (str, optional): La extensión o con la que se guardará el archivo. Defaults to "txt".
+        """
         filas=""
-        archivoTexto=open(nombre+".txt","w")
+        archivoTexto=open(nombre+"."+extension,"w")
         for fila in self.tabla:
             for col in fila:
                 filas += str(col) + "\t"
