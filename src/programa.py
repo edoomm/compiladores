@@ -1,4 +1,4 @@
-from convertidorPostfijo import *
+from regex2afn.py import *
 import copy
 import traceback
 import sys
