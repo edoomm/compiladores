@@ -1,5 +1,5 @@
 
-from AnalizadorLexico import *
+from evaluadorcalc import *
 
 class convertidorPostfijo(object):
 

@@ -1,5 +1,7 @@
-from evaluadorcalc import *
+from regex2afn import *
 import copy
+import traceback
+import sys
 
 idsAfns = 0 # Servirá para asignar IDs a los AFNs que vayan siendo creados
 afns = {} # Servirá para ir guardando los AFNs creados
@@ -32,7 +34,11 @@ def error(msj = None):
 def imprimirmenu():
     """Imprime el menú principal del programa
     """
-    print("\n\n\n\n\n\n\n\n\n\n\nMenú principal")
+    linebreak = "\n"
+    for i in range(0, 8):
+        linebreak += "\n"
+    print(linebreak)
+    print("Menú principal")
     print("--------------")
     print("1) AFNs")
     print("2) Analizador sintáctico")
@@ -40,7 +46,7 @@ def imprimirmenu():
     print("\n0) Salir")
 
 def leerCaracter(msj):
-    """Lee un caracter. Si el usuario ingresa una cadena, solo se tomará en cuenta el primer caracter de la cadena
+    """Lee un caracter. (Si el usuario ingresa una cadena, solo se tomará en cuenta el primer caracter de la cadena)
 
     Args:
         msj (str): Mensaje adicional a agregar al error
@@ -48,11 +54,11 @@ def leerCaracter(msj):
     Returns:
         chr: El caracter leido
     """
-    s = input(msj)
-    if len(s) > 1:
-        print("Solo se tomará el primer caracter de su cadena")
+    return input(msj)
+    # if len(s) > 1:
+    #     print("Solo se tomará el primer caracter de su cadena")
     
-    return s[0]
+    # return s[0]
 
 def leerID(msj, end=None, afs=afns):
     """Lee un ID valido de la lista de AFNs que se tiene
@@ -160,6 +166,31 @@ def leerarchivo():
     
     analizador = aux
 
+def setanalizador():
+    """Establece el analizador léxico que deberá usar el programa
+    """
+    global analizador
+    if analizador.archivo == None:
+        if leerarchivo() == False:
+            return False
+    else:
+        print("Archivo que se está utilizando para analizar cadenas:", analizador.archivo + ".txt")
+        newfile = input("Si quiere cambiar a un archivo diferente, escriba el nombre del archivo (Si da ENTER sin teclear nada se seguirá usando el mismo archivo):\n")
+        if newfile:
+            if leerarchivo() == False:
+                print("Se usará el archivo", analizador.archivo, "para el analisis")
+    return True
+
+def obteneridAFD() -> int:
+    """Obtiene de la lista de AFDs el ID que el usuario quiera utilizar
+
+    Returns:
+        int: El ID del AFD
+    """
+    print("AFDs")
+    imprimirAFs(afds)
+    return leerID("Escoja el ID del AFD a imprimir (cancele con -1): ", end=-1, afs=afds)
+
 ### Menu AFNs
 def imprimirMenuAfns():
     """Imprime el menú de las operaciones que se pueden realizar con AFNs.
@@ -180,6 +211,7 @@ def imprimirMenuAfns():
     print("11) Imprimir AFD")
     print("12) Eliminar AFN de la lista de AFNs")
     print("13) Eliminar AFD de la lista de AFDs")
+    print("14) Exportar AFD")
     print("\n0) Salir")
 
 ## Opción 1
@@ -189,9 +221,10 @@ def crearAfnBasico():
     s1 = leerCaracter("Ingrese el simbolo inferior: ")
     s2 = leerCaracter("Ingrese el simbolo superior: ")
 
-    if ord(s1) > ord(s2):
-        error("En la lectura de los caractéres. El caracter inferior es superior al caracter superior")
-        return
+    if len(s1) == 1 and len(s2) == 1:
+        if ord(s1) > ord(s2):
+            error("En la lectura de los caractéres. El caracter inferior es superior al caracter superior")
+            return
 
     global idsAfns
     a = AFN(idsAfns)
@@ -293,16 +326,7 @@ def conversion(afn):
 
 ## Opción 9
 def analizarcad():
-    global analizador
-    if analizador.archivo == None:
-        if leerarchivo() == False:
-            return
-    else:
-        print("Archivo que se está utilizando para analizar cadenas:", analizador.archivo + ".txt")
-        newfile = input("Si quiere cambiar a un archivo diferente, escriba el nombre del archivo (Si da ENTER sin teclear nada se seguirá usando el mismo archivo):\n")
-        if newfile:
-            if leerarchivo() == False:
-                print("Se usará el archivo", analizador.archivo, "para el analisis")
+    setanalizador()
     
     analizador.CadenaSigma = input("Ingrese la cadena a analizar: ")
     print("INICIO DEL ANÁLISIS\n-----")
@@ -322,9 +346,7 @@ def imprimirAFNSyAFDs():
 def imprimirAFD():
     """Imprime un AFD del diccionario de AFDs. (Operación cancelable)
     """
-    print("AFDs")
-    imprimirAFs(afds)
-    id = leerID("Escoja el ID del AFD a imprimir (cancele con -1): ", end=-1, afs=afds)
+    id = obteneridAFD()
     if id != -1:
         print(afds[id])
 
@@ -338,6 +360,18 @@ def eliminarAF(afs=afns):
     if id != -1:
         del afs[id]
         print("AFN con ID", id, " quitado de la lista")
+
+## Opción 14
+def expafd():
+    """Exporta un AFD que se haya creado a un archivo txt
+    """
+    id = obteneridAFD()
+    if id != -1:
+        try:
+            afds[id].exportarAFD(input("Ingrese el nombre del archivo donde se guardará el AFD: "))
+            print("AFD exportado correctamente")
+        except:
+            print("No se pudo exportar el AFD")
 
 def menuafns(op):
     """Función que sirve para esocger la acción que el usuario desea realizar en el Menu correspondiente a los AFNs
@@ -403,21 +437,31 @@ def menuafns(op):
             print("No se tiene ningun AFD guardado")
         else:
             eliminarAF(afds)
+    elif op == 14:
+        if len(afds) < 1:
+            print("No se tiene ningún AFD guardado")
+        else:
+            expafd()
     elif op == 0:
         print("Regresando a menú principal(:")
-        return
+        return False
     else:
         error("Opción no valida. Vuelva a intentarlo")
     
     esperar()
 
-### Menu Analizador léxico
+### Menu Analizador Sintáctico
 def imprimirMenuAnSintactico():
     """Imprime el menú correspondiente a los analizadores sintácticos implementados
     """
+    linebreak = "\n"
+    for i in range(0, 8):
+        linebreak += "\n"
+    print(linebreak)
     print("Menú Analizadores sintácticos")
     print("-----------------------------")
-    print("1) Calculadora")
+    print("1) Evaluar expresión numérica")
+    print("2) Convertidor post-fijo")
     print("\n0) Salir")
 
 def menuansyn(op):
@@ -428,6 +472,11 @@ def menuansyn(op):
     """
     if op == 1:
         evaluarcalc()
+    elif op == 2:
+        convpostfijo()
+    elif op == 0:
+        print("Regresando a menu principal(:")
+        return False
     else:
         error("Opción no valida. Vuelva a intentarlo")
     esperar()
@@ -436,16 +485,8 @@ def menuansyn(op):
 def evaluarcalc():
     """Evalua a través de un AFD una expresión numérica a ingresar
     """
-    global analizador
-    if analizador.archivo == None:
-        if leerarchivo() == False:
-            return
-    else:
-        print("Archivo que se está utilizando para analizar cadenas:", analizador.archivo + ".txt")
-        newfile = input("Si quiere cambiar a un archivo diferente, escriba el nombre del archivo (Si da ENTER sin teclear nada se seguirá usando el mismo archivo):\n")
-        if newfile:
-            if leerarchivo() == False:
-                print("Se usará el archivo", analizador.archivo, "para el analisis")
+    if setanalizador() == False:
+        return
     
     analizador.CadenaSigma = input("Ingrese la expresión a evaluar: ")
     analizador.resetattributes()
@@ -455,29 +496,55 @@ def evaluarcalc():
     else:
         print("Expresión sintácticamente INCORRECTA")
 
+## Notación post-fija
+def convpostfijo():
+    """Convierte una expresión numérica a su equivalente en notación post-fija
+    """
+    if setanalizador() == False:
+        return
+
+    analizador.CadenaSigma = input("Ingrese la expresión a evaluar: ")
+    analizador.resetattributes()
+    ansyntax = convertidorPostfijo(analizador)
+    if ansyntax.ConvPostfijo():
+        print("Expresión sintácticamente correcta.\nResultado:", ansyntax.getCadenaPost())
+    else:
+        print("Expresión sintácticamente INCORRECTA")
+
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
 
     Args:
         op (int): La opción escojida por el usuario
     """
-    while op != 0:
-        if op == 1:
+    op1 = op
+    exited = True if op1 == 0 else False
+    while not exited:
+        if op1 == 1:
             imprimirMenuAfns()
             try:
-                op = int(input("Su opción:"))
-                menuafns(op)
-            except:
+                op2 = int(input("Su opción: "))
+                if menuafns(op2) == False:
+                    exited = True
+            except Exception:
                 error("Opción no valida, vuelva a intentarlo...")
-        elif op == 2:
+                try:
+                    exc_info = sys.exc_info()
+                finally:
+                    # Display the *original* exception
+                    traceback.print_exception(*exc_info)
+                    del exc_info
+                    esperar()
+        elif op1 == 2:
             imprimirMenuAnSintactico()
             try:
-                op = int(input("Su opción:"))
-                menuansyn(op)
+                op2 = int(input("Su opción:"))
+                if menuansyn(op2) == False:
+                    exited = True
             except:
                 error("Opción no valida, vuelva a intentarlo...")
-        elif op == 0:
-            print("(:")
+        elif op1 == 0:
+            exited = True
         else:
             error("Opción no valida, vuelva a intentarlo...")
             return
@@ -487,17 +554,15 @@ def main():
     """
     op = -1
     while op != 0:
-        # imprimirmenu()
-        print("num) Evaluar expresión")
-        print("0) Salir")
+        imprimirmenu()
         try:
             op = int(input("Su opción: "))
             if op == 0:
+                print("(:")
                 return
-            evaluarcalc()
-            # menu(op)
+            menu(op)
         except:
-            error("Opción no valida, vuelva a intentarlo...")
+            error("Opción invalida, vuelva a intentarlo...")
             esperar()
     # analizarcad()
 
