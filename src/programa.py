@@ -1,4 +1,4 @@
-from regex2afn.py import *
+from regex2afn import *
 import copy
 import traceback
 import sys
