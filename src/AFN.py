@@ -55,8 +55,11 @@ class AFN():
         e1.setTransicion(t)
 
         # Se actualiza el alfabeto
-        for i in range(ord(simbolo), ord(simbolo2) + 1):
-            self.Alfabeto.add(chr(i))
+        if len(simbolo)>1 or len(simbolo2) >1:
+             self.Alfabeto.add(simbolo)
+        else:
+            for i in range(ord(simbolo), ord(simbolo2) +1):
+                self.Alfabeto.add(chr(i))
 
         self.EdoIni=e1
         self.setEdosAFN(e1)

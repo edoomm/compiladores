@@ -127,17 +127,14 @@ g.concatenar(h)
 analizador = AnalizadorLexico()
 analizador.union([a,b,c,d,e,f,g])
 # analizador.afn.imprimir()
-
 afd = AFD(afn=analizador.afn)
 print("Digita el nombre del AFD: ")      
 afd.exportarAFD(input())
-
 afdDos=AFD()
 print("Digita el nombre del AFD: ")  
 afdDos.importarAFD(input())
 #print(afdDos)
 analizador.setCadenAndTabla("(45*23)/((12+42)+1)*5",afdDos)#2.8+7*4
-
 con=convertidorPostfijo(analizador)
 con.ConvPostfijo()
 
