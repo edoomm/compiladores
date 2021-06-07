@@ -7,13 +7,13 @@ class convertidorER(object):
     def __init__(self,analizador: AnalizadorLexico):
         self._anLexico=analizador
         self._expRegular=""
-        self._result=AFN()
+        self._result=None
     
     def IniConversion(self):
         f=AFN()
         #ref=[f]
-        if (self.E(f)):
-            if (self._anLexico.yylex() == EPSILON):
+        if self.E(f):
+            if self._anLexico.yylex() == EPSILON:
                 self._result =f
                 return True
         return False
@@ -22,11 +22,12 @@ class convertidorER(object):
         if self.T(f):
             if self.Ep(f):
                 return True
-        
         return False
     
-    def EP(self,f):
+    def Ep(self,f):
+        #f.imprimir()
         f2=AFN()
+        
         #result2=[f2]
         token=self._anLexico.yylex()
         if token=="10": #OR
@@ -188,7 +189,7 @@ afdDos=AFD()
 print("Digita el nombre del AFD: ")  
 afdDos.importarAFD(input())
 #print(afdDos)
-analizador.setCadenAndTabla("[a-z]&[A-Z]",afdDos)#2.8+7*4
+analizador.setCadenAndTabla("[a-z]&[A-Z]&!*",afdDos)#2.8+7*4
 #analizador.analizarCadena()
 con=convertidorER(analizador)
 con.IniConversion()
