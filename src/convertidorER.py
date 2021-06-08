@@ -1,6 +1,4 @@
-
-from AnalizadorLexico import *
-
+from convertidorPostfijo import *
 
 class convertidorER(object):
 
@@ -127,81 +125,4 @@ class convertidorER(object):
         return False
     def getResultado(self):
         return self._result
-    
-
-
-    
-a = AFN()
-a.crearAFNBasico('|')
-b = AFN()
-b.crearAFNBasico('&')
-c = AFN()
-c.crearAFNBasico('+')
-d = AFN()
-d.crearAFNBasico('*')
-e = AFN()
-e.crearAFNBasico('?')
-f = AFN()
-f.crearAFNBasico('(')
-g = AFN()
-g.crearAFNBasico(')')
-h= AFN()
-h.crearAFNBasico('[')
-i = AFN()
-i.crearAFNBasico(']')
-j = AFN()
-j.crearAFNBasico('-')
-# Creación de D.D = [0-9]+ o (. o [0-9]+)?
-k = AFN()
-k.crearAFNBasico('0', '9')
-l=AFN()
-l.crearAFNBasico('a','z')
-m=AFN()
-m.crearAFNBasico('A','Z')
-n=AFN()
-n.crearAFNBasico('!')
-o=AFN()
-o.crearAFNBasico('+')
-o.opcional()
-n.concatenar(o)
-o=AFN()
-o.crearAFNBasico('*')
-o.opcional()
-n.concatenar(o)
-p=AFN()
-p.crearAFNBasico('-')
-p.opcional()
-n.concatenar(p)
-q=AFN()
-q.crearAFNBasico('/')
-q.opcional()
-n.concatenar(q)
-k.unir(l)
-k.unir(m)
-k.unir(n)
-
-analizador = AnalizadorLexico()
-analizador.union([a,b,c,d,e,f,g,h,i,j,k])
-afd = AFD(afn=analizador.afn)
-print("Digita el nombre del AFD: ")      
-afd.exportarAFD(input())
-afdDos=AFD()
-print("Digita el nombre del AFD: ")  
-afdDos.importarAFD(input())
-#print(afdDos)
-analizador.setCadenAndTabla("[a-z]&[A-Z]&!*",afdDos)#2.8+7*4
-#analizador.analizarCadena()
-con=convertidorER(analizador)
-con.IniConversion()
-afnR=con.getResultado()
-print("\n")
-afnR.imprimir()
-#con=convertidorPostfijo(analizador)
-#con.ConvPostfijo()
-
-#print(con.getCadenaPost())  
-
-
-
-
-
+        

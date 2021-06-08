@@ -1,4 +1,3 @@
-
 from evaluadorcalc import *
 
 class convertidorPostfijo(object):
@@ -96,48 +95,3 @@ class convertidorPostfijo(object):
 
     def getCadenaPost(self):
         return self._lexPos
-
-
-# # Creación de AFNs básicos
-a = AFN()
-a.crearAFNBasico('+')
-b = AFN()
-b.crearAFNBasico('-')
-c = AFN()
-c.crearAFNBasico('*')
-d = AFN()
-d.crearAFNBasico('/')
-e = AFN()
-e.crearAFNBasico('(')
-f = AFN()
-f.crearAFNBasico(')')
-# Creación de D.D = [0-9]+ o (. o [0-9]+)?
-g = AFN()
-g.crearAFNBasico('0', '9')
-g.cerradurap()
-h = AFN()
-h.crearAFNBasico('.')
-i = AFN(1)
-i.crearAFNBasico('0', '9')
-i.cerradurap()
-h.concatenar(i)
-h.opcional()
-g.concatenar(h)
-
-analizador = AnalizadorLexico()
-analizador.union([a,b,c,d,e,f,g])
-# analizador.afn.imprimir()
-afd = AFD(afn=analizador.afn)
-print("Digita el nombre del AFD: ")      
-afd.exportarAFD(input())
-afdDos=AFD()
-print("Digita el nombre del AFD: ")  
-afdDos.importarAFD(input())
-#print(afdDos)
-analizador.setCadenAndTabla("(45*23)/((12+42)+1)*5",afdDos)#2.8+7*4
-con=convertidorPostfijo(analizador)
-con.ConvPostfijo()
-
-print(con.getCadenaPost())
-
-

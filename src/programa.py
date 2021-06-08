@@ -1,4 +1,4 @@
-from regex2afn import *
+from convertidorER import *
 import copy
 import traceback
 import sys
@@ -462,6 +462,7 @@ def imprimirMenuAnSintactico():
     print("-----------------------------")
     print("1) Evaluar expresión numérica")
     print("2) Convertidor post-fijo")
+    print("3) Convertidor de ER a AFN")
     print("\n0) Salir")
 
 def menuansyn(op):
@@ -474,6 +475,8 @@ def menuansyn(op):
         evaluarcalc()
     elif op == 2:
         convpostfijo()
+    elif op == 3:
+        converafn()
     elif op == 0:
         print("Regresando a menu principal(:")
         return False
@@ -508,6 +511,21 @@ def convpostfijo():
     ansyntax = convertidorPostfijo(analizador)
     if ansyntax.ConvPostfijo():
         print("Expresión sintácticamente correcta.\nResultado:", ansyntax.getCadenaPost())
+    else:
+        print("Expresión sintácticamente INCORRECTA")
+
+## Convertidor de ER a AFN
+def converafn():
+    """Convierte una expresión regular en un AFN
+    """
+    if setanalizador() == False:
+        return
+
+    analizador.CadenaSigma = input("Ingrese la expresión a evaluar: ")
+    analizador.resetattributes()
+    ansyntax = convertidorER(analizador)
+    if ansyntax.IniConversion():
+        print("Expresión sintácticamente correcta.\nResultado:\n", ansyntax.getResultado())
     else:
         print("Expresión sintácticamente INCORRECTA")
 
