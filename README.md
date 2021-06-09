@@ -7,7 +7,7 @@ Actualmente el proyecto puede realizar la creación de **AFNs** *(Autómatas Fin
 ## Todo
 - [x] Integración de analizador léxico al programa principal
 - [x] Revisión de errores en analizador léxico
-- [ ] Construcción de analizador sintáctico
+- [x] Construcción de analizador sintáctico
   - [x] Calculadora
     - [x] Notación Post-Fija
     - [x] Evaluador de expresiones

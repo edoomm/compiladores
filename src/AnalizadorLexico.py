@@ -125,6 +125,9 @@ class AnalizadorLexico(object):
         self.finLexema=-1
         self.token="-1"
         i=self.IndiceCaracterActual
+        # Solución *temporal* para poder leer espacios
+        if len(self.tablaAFD[0]) < len(self.tablaAFD[1]):
+            self.tablaAFD[0].insert(1, ' ')
 
         for t in self.tablaAFD:
             tam=len(t)
@@ -137,7 +140,6 @@ class AnalizadorLexico(object):
             banderaCaracter=0
 
             while j < tam : #len(self.tablaAFD[0])
-
                 if self.caracterActual==self.tablaAFD[0][j]:
                     banderaCaracter=1
                     self.EdoTransicion=int(self.tablaAFD[self.EdoActual+1][j])
@@ -187,6 +189,11 @@ class AnalizadorLexico(object):
         tokenlocal=""
         while self.IndiceCaracterActual<len(self.CadenaSigma):
             tokenlocal=self.yylex()
+            # Solución (temporal) para que no se cicle el programa
+            if tokenlocal == '-1':
+                self.Lexema = self.CadenaSigma[self.IndiceCaracterActual]
+                tokenlocal = "ERROR"
+                self.IndiceCaracterActual += 1
             print(self.Lexema," Token:",tokenlocal)
 
         self.resetattributes()

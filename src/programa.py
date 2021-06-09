@@ -584,4 +584,21 @@ def main():
             esperar()
     # analizarcad()
 
-main()
+# main()
+
+#################################################################################################
+#   TEST SECTION                                                                                #
+#################################################################################################
+
+while True:
+    a = AFN()
+    a.crearAFNBasico('-')
+    b = AFN()
+    b.crearAFNBasico('>')
+    a.concatenar(b)
+    afd = AFD(a)
+    afd.exportarAFD("test")
+    file = input("File: ")
+    analizador = AnalizadorLexico("test" if file == "" else file)
+    analizador.CadenaSigma = input("Cadena a analizar: ")
+    analizador.analizarCadena()
