@@ -142,8 +142,10 @@ class AnalizadorLexico(object):
             while j < tam : #len(self.tablaAFD[0])
                 if self.caracterActual==self.tablaAFD[0][j]:
                     banderaCaracter=1
+                    etr = self.EdoTransicion
                     self.EdoTransicion=int(self.tablaAFD[self.EdoActual+1][j])
-                    #print(self.EdoTransicion)
+                    # SOLUCIÓN TEMPORAL para que "self.tablaAFD[self.EdoTransicion+1]" no se desborde
+                    self.EdoTransicion = etr if self.EdoTransicion > len(self.tablaAFD) else self.EdoTransicion
                  
                 j+=1
             if banderaCaracter==0:
@@ -151,6 +153,7 @@ class AnalizadorLexico(object):
             j=0
 
             if self.EdoTransicion != -1 and self.EdoTransicion != None and banderaCaracter!=0:
+                # print(self.EdoTransicion, tam)
                 if self.tablaAFD[self.EdoTransicion+1][tam-1]!='-1': #self.tablaAFD[self.EdoActual])
                    self.PasoPorEdoAcept=True
                    self.token=self.tablaAFD[self.EdoTransicion+1][tam-1]
@@ -190,11 +193,12 @@ class AnalizadorLexico(object):
         while self.IndiceCaracterActual<len(self.CadenaSigma):
             tokenlocal=self.yylex()
             # Solución (temporal) para que no se cicle el programa
-            if tokenlocal == '-1':
-                self.Lexema = self.CadenaSigma[self.IndiceCaracterActual]
+            if tokenlocal == '-1' or tokenlocal == 'ERROR':
+                if self.IndiceCaracterActual < len(self.CadenaSigma):
+                    self.Lexema = self.CadenaSigma[self.IndiceCaracterActual]
                 tokenlocal = "ERROR"
                 self.IndiceCaracterActual += 1
-            print(self.Lexema," Token:",tokenlocal)
+            print(self.Lexema,"Token:",tokenlocal)
 
         self.resetattributes()
 

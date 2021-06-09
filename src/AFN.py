@@ -6,7 +6,7 @@ EPSILON = chr(5)
 FIN = chr(0)
 
 class AFN():
-    def __init__(self, id=0):
+    def __init__(self, id=0, simbinf = "", simbsup = None):
         self.contadorIds=0
         self.incremento=0
         self.EdoIni=None
@@ -14,6 +14,10 @@ class AFN():
         self.EdosAFN=set()
         self.Alfabeto = set()
         self.idAFN = id
+        if simbinf != "":
+            self.crearAFNBasico(simbinf, simbsup)
+        
+        # return self
     
     def __str__(self):
         print("AFN con ID:", self.idAFN)
@@ -109,6 +113,8 @@ class AFN():
         self.EdosAFN.add(e1)
         self.EdosAFN.add(e2)
         self.Alfabeto = self.Alfabeto | f2.Alfabeto
+
+        return self
 
     # OPCIÓN 3
     def concatenar(self, f):
