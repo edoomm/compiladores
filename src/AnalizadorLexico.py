@@ -198,7 +198,8 @@ class AnalizadorLexico(object):
                     self.Lexema = self.CadenaSigma[self.IndiceCaracterActual]
                 tokenlocal = "ERROR"
                 self.IndiceCaracterActual += 1
-            print(self.Lexema,"Token:",tokenlocal)
+            strlex = "'" + str(self.Lexema) + "'"
+            print("Token:",tokenlocal, "| Lexema:", strlex)
 
         self.resetattributes()
 

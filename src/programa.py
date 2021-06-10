@@ -584,42 +584,42 @@ def main():
             esperar()
     # analizarcad()
 
-# main()
+main()
 
 #################################################################################################
 #   TEST SECTION                                                                                #
 #################################################################################################
 
-while True:
-    simb = AFN()
-    simb.crearAFNBasico('a', 'z')
-    simb.unir(AFN(simbinf = "A", simbsup = "Z"))
-    # simb.concatenar(AFN(simbinf = 'a', simbsup = 'z').unir(AFN(simbinf='A', simbsup='Z')))
-    s2 = AFN(simbinf='a', simbsup='z')
-    s2.unir(AFN(simbinf='A', simbsup='Z')).unir(AFN(simbinf='0', simbsup='9')).unir(AFN(simbinf='_')).unir(AFN(simbinf="'"))
-    s2.cerradurak()
-    simb.concatenar(s2)
+# while True:
+#     simb = AFN()
+#     simb.crearAFNBasico('a', 'z')
+#     simb.unir(AFN(simbinf = "A", simbsup = "Z"))
+#     # simb.concatenar(AFN(simbinf = 'a', simbsup = 'z').unir(AFN(simbinf='A', simbsup='Z')))
+#     s2 = AFN(simbinf='a', simbsup='z')
+#     s2.unir(AFN(simbinf='A', simbsup='Z')).unir(AFN(simbinf='0', simbsup='9')).unir(AFN(simbinf='_')).unir(AFN(simbinf="'"))
+#     s2.cerradurak()
+#     simb.concatenar(s2)
 
-    pc = AFN(simbinf=';')
+#     pc = AFN(simbinf=';')
 
-    flecha = AFN(simbinf='-')
-    flecha.concatenar(AFN(simbinf='>'))
+#     flecha = AFN(simbinf='-')
+#     flecha.concatenar(AFN(simbinf='>'))
 
-    orafn = AFN(simbinf="|") # No funciona con \|
+#     orafn = AFN(simbinf="|") # No funciona con \|
 
-    esp = AFN(simbinf=' ')
-    esp.cerradurap()
+#     esp = AFN(simbinf=' ')
+#     esp.cerradurap()
 
-    # afd = AFD(simb)
-    # afd.exportarAFD("test")
-    # file = ""
-    # analizador = AnalizadorLexico("test" if file == "" else file)
-    analizador = AnalizadorLexico()
-    analizador.union([simb, pc, flecha, orafn, esp])
-    afd = AFD(analizador.afn)
-    afd.exportarAFD("test")
-    op = 1
-    file = "" if op == 1 else input("file: ")
-    analizador = AnalizadorLexico("test" if file == "" else file)
-    analizador.CadenaSigma = input("Cadena a analizar: ")
-    analizador.analizarCadena()
+#     # afd = AFD(simb)
+#     # afd.exportarAFD("test")
+#     # file = ""
+#     # analizador = AnalizadorLexico("test" if file == "" else file)
+#     analizador = AnalizadorLexico()
+#     analizador.union([simb, pc, flecha, orafn, esp])
+#     afd = AFD(analizador.afn)
+#     afd.exportarAFD("test")
+#     op = 1
+#     file = "" if op == 1 else input("file: ")
+#     analizador = AnalizadorLexico("test" if file == "" else file)
+#     analizador.CadenaSigma = input("Cadena a analizar: ")
+#     analizador.analizarCadena()
