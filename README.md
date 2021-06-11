@@ -15,7 +15,7 @@ Actualmente el proyecto puede realizar la creación de **AFNs** *(Autómatas Fin
     - [x] Implementación con símbolos especiales (\\*, \\+, \\?, ...)
 - [ ] [Análisis LL](https://drive.google.com/file/d/1mlB4ACLrKcQ8D-cdlvT9GMHLGt77AhMO/view)
   - [x] [Gramática de gramáticas](https://drive.google.com/file/d/10th--Ndkvnp8YphKhJxvB40Uur5TkTQe/view)
-  - [ ] Analizadores léxico y sintáctico para gramáticas de gramáticas
+  - [x] Analizadores léxico y sintáctico para gramáticas de gramáticas
   - [ ] [Operación Firt & Follow](https://drive.google.com/file/d/1CqzPvBLwa9CJU2FDxNhKhc8uVCE3qcv8/view)
   - [ ] Construcción de la tabla LL(1)
   - [ ] Analizador léxico para la gramática de entrada
