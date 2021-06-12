@@ -138,7 +138,7 @@ class AFD(object):
  
     #Algorigmo para importacion de AFD
     def importarAFD(self,nombre):
-        archivoTexto=open(nombre+".txt","r") #abrimos el archivo txt y extraemos los datos por filas
+        archivoTexto=open("../afds/"+nombre+".txt","r") #abrimos el archivo txt y extraemos los datos por filas
         lineas=archivoTexto.readlines()
         archivoTexto.close()
         linea=[]        #Generamos una lista la cual contendra cada cadena que necesitemos

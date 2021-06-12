@@ -194,6 +194,6 @@ class convertidorER(object):
 # print("\n")
 # afnR.imprimir()
 # #con=convertidorPostfijo(analizador)
-# #con.ConvPostfijo()
+# con.ConvPostfijo()
 
-# #print(con.getCadenaPost())  
+# print(con.getCadenaPost())  

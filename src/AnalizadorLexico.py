@@ -108,7 +108,10 @@ class AnalizadorLexico(object):
         self.CadenaSigma=cadena
         self.tablaAFD=afd.getTablaAFD()
 
-    def yylex(self):
+    def yylex(self,lexemab=None):
+        lexban=0
+        if lexemab!=None:
+            lexban=1
         banderaCaracter=0
         j=0
         numTrans=0
@@ -117,7 +120,10 @@ class AnalizadorLexico(object):
         #print(self.tablaAFD)
         if self.IndiceCaracterActual >= len(self.CadenaSigma):
            self.Lexema=""
-           return EPSILON
+           if lexban==0:        
+             return EPSILON
+           elif lexban==1:
+             return EPSILON,self.Lexema 
         
         self.Inilexema=self.IndiceCaracterActual
         self.EdoActual = 0
@@ -185,8 +191,10 @@ class AnalizadorLexico(object):
                 self.Lexema=self.CadenaSigma[self.Inilexema:self.finLexema+1]
             else:
                 self.Lexema=self.CadenaSigma[self.Inilexema]
-                
-        return self.token
+        if lexban==0:        
+            return self.token
+        elif lexban==1:
+            return self.token,self.Lexema
 
     def analizarCadena(self):
         tokenlocal=""
