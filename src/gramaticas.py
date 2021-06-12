@@ -27,23 +27,34 @@ class GramaticasDeGramaticas(object):
     
     ''' Métodos
     '''
-    def ini(self):
+    def getToken(self):
+        """Obtiene el token del analizador léxico descartando los espacios
+        """
+        token = self.anlex.yylex()
+        return token if token != "40" else self.anlex.yylex()
+
+    def inieval(self):
         if self.G():
-            if self.anlex.yylex() == EPSILON:
+            if self.getToken() == EPSILON:
                 return True
         return False
     
     def G(self):
+        if self.ListaReglas():
+            return True
+        return False
+    
+    def ListaReglas(self):
         if self.Regla():
-            if self.anlex.yylex() == 10: # PUNTO Y COMA
-                if self.ListaReglasP():
+            if self.getToken() == "10": # PUNTO Y COMA
+                if self.ListasReglasP():
                     return True
         return False
 
     def ListasReglasP(self):
         if self.Regla():
-            if self.anlex.yylex() == 10: # PUNTO Y COMA
-                if self.ListaReglasP():
+            if self.getToken() == "10": # PUNTO Y COMA
+                if self.ListasReglasP():
                     return True
             return False
         self.anlex.undotoken()
@@ -51,13 +62,13 @@ class GramaticasDeGramaticas(object):
     
     def Regla(self):
         if self.LadoIzq():
-            if self.anlex.yylex() == 20: # FLECHA
+            if self.getToken() == "20": # FLECHA
                 if self.LadosDerechos():
                     return True
         return False
 
     def LadoIzq(self):
-        if self.anlex.yylex() == 30: # SIMBOLO
+        if self.getToken() == "30": # SIMBOLO
             return True
         return False
 
@@ -68,7 +79,7 @@ class GramaticasDeGramaticas(object):
         return False
 
     def LadosDerechosP(self):
-        if self.anlex.yylex() == 50: # OR
+        if self.getToken() == "50": # OR
             if self.LadoDerecho():
                 if self.LadosDerechosP():
                     return True
@@ -77,13 +88,13 @@ class GramaticasDeGramaticas(object):
         return True
 
     def LadoDerecho(self):
-        if self.anlex.yylex() == 30: # SIMBOLO
+        if self.getToken() == "30": # SIMBOLO
             if self.LadoDerechoP():
                 return True
         return False
 
     def LadoDerechoP(self):
-        if self.anlex.yylex() == 30: # SIMBOLO
+        if self.getToken() == "30": # SIMBOLO
             if self.LadoDerechoP():
                 return True
             return False
@@ -96,6 +107,10 @@ class GramaticasDeGramaticas(object):
 
 analizador = AnalizadorLexico("grams")
 op = 2
-analizador.CadenaSigma = input("Cadena a analizar: ") if op == 1 else "E->E MAS T|E MENOS T|T;T->T POR F|T ENTRE F|F;F->P_I E P_D|NUM;"
+cadena = "E->E MAS T|E MENOS T|T;T->T POR F|T ENTRE F|F;F->P_I E P_D|NUM;"
+analizador.CadenaSigma = input("\nCadena a analizar: ") if op == 1 else cadena
+if op != 1:
+    print("\nCadena a analizar:", cadena, "\n")
 gx2 = GramaticasDeGramaticas(analizador)
-print("CORRECTO" if gx2.ini() else "INCORRECTO")
+print("CORRECTO" if gx2.inieval() else "INCORRECTO")
+print("")
