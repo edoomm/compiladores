@@ -127,7 +127,7 @@ class AFD(object):
             extension (str, optional): La extensión o con la que se guardará el archivo. Defaults to "txt".
         """
         filas=""
-        archivoTexto=open(nombre+"."+extension,"w")
+        archivoTexto=open("../afds/" +nombre+"."+extension,"w", encoding="utf-8")
         for fila in self.tabla:
             for col in fila:
                 filas += str(col) + "\t"

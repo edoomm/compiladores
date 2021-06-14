@@ -28,10 +28,7 @@ class GramaticasDeGramaticas(object):
     @result.setter
     def result(self, value):
         self._result = value
-    @property
-    def ListaReglas(self):
-        return self._ListaReglas
-
+    
     ''' Métodos
     '''
     ### Sintacticos
@@ -130,27 +127,7 @@ class GramaticasDeGramaticas(object):
     ### Otros
     def imprimirListaReglas(self):
         for l in self._ListaReglas:
-            print (l)
-            for lf in l:
+            print('|', l[0], '|', sep='', end='->')
+            for lf in l[1:len(l)]:
                 print(lf, end='->')
-            print("\n****")
-
-#################################################################################################
-#   TEST SECTION                                                                                #
-#################################################################################################
-
-analizador = AnalizadorLexico("grams")
-op = 1
-cadena = "E->E MAS T|E MENOS T|T;T->T POR F|T ENTRE F|F;F->P_I E P_D|NUM;"
-analizador.CadenaSigma = input("\nCadena a analizar: ") if op == 1 else cadena
-if op != 1:
-    print("\nCadena a analizar:", cadena, "\n")
-
-gx2 = GramaticasDeGramaticas(analizador)
-if gx2.inieval():
-    print("CORRECTO")
-    print("")
-    gx2.imprimirListaReglas()
-else:
-    print("INCORRECTO")
-print(gx2._ListaReglas)
+            print("‖", end="\n----\n")
