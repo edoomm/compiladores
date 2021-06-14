@@ -2,12 +2,12 @@ from convertidorER import *
 
 class GramaticasDeGramaticas(object):
     def __init__(self,analizador: AnalizadorLexico):
-        self._anLexico  = analizador
-        self._result    = None
-        self._ListaReglas =[]
-        self._ListaFila=[]
-        self._auxIzq=""
-        self._aux=""
+        self._anLexico      = analizador
+        self._result        = None
+        self._ListaReglas   = []
+        self._ListaFila     = []
+        self._auxIzq        = ""
+        self._aux           = ""
     
     ''' Atributos
     '''
@@ -31,16 +31,10 @@ class GramaticasDeGramaticas(object):
     @property
     def ListaReglas(self):
         return self._ListaReglas
-        
-    def imprimirListaReglas(self):
-        for l in self._ListaReglas:
-            for lf in l:
-                print("="+lf+" ")
-            print("****")
-
 
     ''' Métodos
     '''
+    ### Sintacticos
     def getToken(self):
         """Obtiene el token del analizador léxico descartando los espacios
         """
@@ -72,12 +66,13 @@ class GramaticasDeGramaticas(object):
         return False
 
     def ListasReglasP(self):
+        p = self.anlex.getparams()
         if self.Regla():
             if self.getToken() == "10": # PUNTO Y COMA
                 if self.ListasReglasP():
                     return True
             return False
-        self.anlex.undotoken()
+        self.anlex.setparams(p)
         return True
     
     def Regla(self):
@@ -132,21 +127,30 @@ class GramaticasDeGramaticas(object):
         self.anlex.undotoken()
         return True
 
+    ### Otros
+    def imprimirListaReglas(self):
+        for l in self._ListaReglas:
+            print (l)
+            for lf in l:
+                print(lf, end='->')
+            print("\n****")
+
 #################################################################################################
 #   TEST SECTION                                                                                #
 #################################################################################################
 
 analizador = AnalizadorLexico("grams")
-op = 2
+op = 1
 cadena = "E->E MAS T|E MENOS T|T;T->T POR F|T ENTRE F|F;F->P_I E P_D|NUM;"
 analizador.CadenaSigma = input("\nCadena a analizar: ") if op == 1 else cadena
 if op != 1:
     print("\nCadena a analizar:", cadena, "\n")
 
-#analizador.analizarCadena()
-
-
 gx2 = GramaticasDeGramaticas(analizador)
-print("CORRECTO" if gx2.inieval() else "INCORRECTO")
-print("")
-gx2.imprimirListaReglas()
+if gx2.inieval():
+    print("CORRECTO")
+    print("")
+    gx2.imprimirListaReglas()
+else:
+    print("INCORRECTO")
+print(gx2._ListaReglas)

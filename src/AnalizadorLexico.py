@@ -241,4 +241,27 @@ class AnalizadorLexico(object):
         self.IndiceCaracterActual = self.pila.pop(0)
         return True
 
-    
+    def getparams(self):
+        """Obtiene todos los parámetros que hacen funcionar al analizador léxico
+
+        Returns:
+            list: Los parámetros en una lista
+        """
+        return self.Inilexema, self.EdoActual, self.PasoPorEdoAcept, self.finLexema, self.token, self.pila, self.Lexema, self.IndiceCaracterActual, self.caracterActual, self.EdoTransicion
+
+    def setparams(self, params:list):
+        """Establece parametros que del analizador léxico
+
+        Args:
+            params (list): La lista de parámetros
+        """
+        self.Inilexema              = params[0]
+        self.EdoActual              = params[1]
+        self.PasoPorEdoAcept        = params[2]
+        self.finLexema              = params[3]
+        self.token                  = params[4]
+        self.pila                   = params[5]
+        self.Lexema                 = params[6]
+        self.IndiceCaracterActual   = params[7]
+        self.caracterActual         = params[8]
+        self.EdoTransicion          = params[9]
