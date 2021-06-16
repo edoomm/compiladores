@@ -98,7 +98,6 @@ class LL1(object):
                 self.tokens[terminal] = input("Ingrese el token para '" + terminal + "': ")
         else:
             self.tokens = {'ENTRE': '40', 'MENOS': '20', 'MAS': '10', 'P_D': '60', 'NUM': '70', 'P_I': '50', 'POR': '30'}
-        print(self.tokens)
 
     def construirTabla(self):
         """Construye la tabla de análisis sintáctico LL(1)
@@ -138,6 +137,14 @@ class LL1(object):
                     columna = self.cabcol.index(self.tokens[col]) + 1
                 else:
                     columna = len(self.cabcol)
+                
+                # Se remplaza por tokens numéricos
+                i = 0
+                while i < len(lst):
+                    if lst[i] in self.tokens.keys():
+                        lst[i] = self.tokens[lst[i]]
+
+                    i+=1
                 self.tabla[fila][columna] = [lst, num]
             num += 1
       
