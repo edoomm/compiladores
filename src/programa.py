@@ -8,6 +8,8 @@ afns = {} # Servirá para ir guardando los AFNs creados
 analizador = AnalizadorLexico()
 afds = {} # Guardará los AFDs
 idsAfds = 0 # Servirá para asignar IDs a los AFDs que vayan siendo creados
+gx2 = None
+anll1 = None
 
 def esperar(msj = None):
     """Muestra un mensaje de espera antes de pasar a una acción siguiente
@@ -40,8 +42,10 @@ def imprimirmenu():
     print(linebreak)
     print("Menú principal")
     print("--------------")
+
     print("1) AFNs")
     print("2) Analizador sintáctico")
+    print("3) Descenso recursivo")
 
     print("\n0) Salir")
 
@@ -451,6 +455,7 @@ def menuafns(op):
     
     esperar()
 
+
 ### Menu Analizador Sintáctico
 def imprimirMenuAnSintactico():
     """Imprime el menú correspondiente a los analizadores sintácticos implementados
@@ -535,6 +540,77 @@ def converafn():
     else:
         print("Expresión sintácticamente INCORRECTA")
 
+
+### MENU DESCENSO RECURSIVO
+def imprimirMenuDescRec():
+    """Imprime el menu correspondiente al descenso recursivo
+    """
+    linebreak = "\n"
+    for i in range(0, 8):
+        linebreak += "\n"
+    print(linebreak)
+    print("Menú Descenso Recursivo")
+    print("-----------------------------")
+    print("1) Ingresar gramática")
+    print("2) Construcción de analizador LL1 (arreglo de reglas y  asignación de tokens")
+    print("3) Imprimir Tabla LL(1)")
+    print("4) Análisis de una cadena")
+    print("\n0) Salir")
+
+def menudescrec(op):
+    """Función que sirve para esocger la acción que el usuario desea realizar en el Menu correspondiente a los AFNs
+
+    Args:
+        op (int): La opción escojida por el usuario
+    """
+    if op == 1:
+        ingresargramatica()
+    elif op == 2:
+        construccionanll1()
+    elif op == 3:
+        imprimirtablaLL1()
+    elif op == 0:
+        print("Regresando a menu principal(:")
+        return False
+    else:
+        error("Opción no valida. Vuelva a intentarlo")
+    esperar()
+
+def ingresargramatica():
+    """Se ingresará una gramática con la que se trabajará para su análisis LL(1)
+    """
+    analizador = AnalizadorLexico("grams")
+    analizador.CadenaSigma = input("\nCadena a analizar: ")
+    global gx2
+    gx2 = GramaticasDeGramaticas(analizador)
+    if gx2.inieval():
+        print("Expresión sintácticamente correcta.")
+    else:
+        print("Expresión sintácticamente incorrecta.")
+
+def construccionanll1():
+    """Se construye el arreglo de reglas y se asignan tokens
+    """
+    if gx2 == None:
+        print("No se ha ingresado una gramática")
+        return False
+    global anll1
+    anll1 = LL1(gx2)
+    anll1.llenarVnAndVt()
+
+    gx2.imprimirListaReglas()
+    anll1.asignarTokens()
+    anll1.construirTabla()
+
+def imprimirtablaLL1():
+    """Se construye e imprime la tabla LL(1)
+    """
+    if anll1 == None:
+        print("Aún no se ha construido el analizador LL(1")
+        return False
+    
+    anll1.imprimirTabla()
+
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
 
@@ -567,6 +643,21 @@ def menu(op):
                     exited = True
             except:
                 error("Opción no valida, vuelva a intentarlo...")
+        elif op1 == 3:
+            imprimirMenuDescRec()
+            try:
+                op2 = int(input("Su opción:"))
+                if menudescrec(op2) == False:
+                    exited = True
+            except Exception:
+                error("Opción no valida, vuelva a intentarlo...")
+                try:
+                    exc_info = sys.exc_info()
+                finally:
+                    # Display the *original* exception
+                    traceback.print_exception(*exc_info)
+                    del exc_info
+                    esperar()
         elif op1 == 0:
             exited = True
         else:
@@ -588,7 +679,6 @@ def main():
         except:
             error("Opción invalida, vuelva a intentarlo...")
             esperar()
-    # analizarcad()
 
 main()
 
