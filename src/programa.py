@@ -1,4 +1,4 @@
-from gramaticas import *
+from LL1 import *
 import copy
 import traceback
 import sys
@@ -131,24 +131,25 @@ def guardarAFD(afd):
     id = input("Ingrese un ID para identificar el AFD creado\n(Si no ingresa nada, el AFD será guardado con un número)\nID: ")
     if not id:
         afds[idsAfds] = afd
+        id = idsAfds
     else:
         # Se verifica si el ID es un número y si también no ya existe en los IDs
         try:
             idnum = int(id)
             if idnum < 0:
                 print("No se puede usar un ID negativo, vuelva a intentar con otro ID")
-                guardarAFD(afd)
-                return
+                return guardarAFD(afd)
             else:
                 id = idnum
         except:
             pass
         if id in afds.keys():
             print("El ID ingresado ya existe, vuelva a intentar con otro ID")
-            guardarAFD(afd)
-            return
+            return guardarAFD(afd)
         
         afds[id] = afd
+    
+    return id
 
 def leerarchivo():
     """Lee el nombre de un archivo que será el AFD que utilizará el Analizador Léxico
@@ -322,7 +323,7 @@ def conversion(afn):
     # Se guarda
     global idsAfds
     idsAfds += 1
-    guardarAFD(a)
+    return guardarAFD(a)
 
 ## Opción 9
 def analizarcad():
@@ -362,10 +363,10 @@ def eliminarAF(afs=afns):
         print("AFN con ID", id, " quitado de la lista")
 
 ## Opción 14
-def expafd():
+def expafd(idafd = None):
     """Exporta un AFD que se haya creado a un archivo txt
     """
-    id = obteneridAFD()
+    id = obteneridAFD() if idafd != None else idafd
     if id != -1:
         try:
             afds[id].exportarAFD(input("Ingrese el nombre del archivo donde se guardará el AFD: "))
@@ -521,11 +522,16 @@ def converafn():
     if setanalizador() == False:
         return
 
-    analizador.CadenaSigma = input("Ingrese la expresión a evaluar: ")
+    analizador.CadenaSigma = input("Ingrese la expresión regular: ")
     analizador.resetattributes()
     ansyntax = convertidorER(analizador)
     if ansyntax.IniConversion():
-        print("Expresión sintácticamente correcta.\nResultado:\n", ansyntax.getResultado())
+        print("Expresión sintácticamente correcta.")
+        if input("¿Guardar AFN? [y/n]: ").lower() == 'y':
+            guardarAFN(ansyntax.getResultado())
+            if input("¿Exportar AFN? [y/n]: ").lower() == 'y':
+                id = conversion(ansyntax.getResultado())
+                expafd(idafd=id)
     else:
         print("Expresión sintácticamente INCORRECTA")
 

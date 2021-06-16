@@ -164,21 +164,21 @@ class LL1(object):
 #   TEST SECTION                                                                                #
 #################################################################################################
 
-analizador = AnalizadorLexico("grams")
-op = 12
-cadena = "E->T E';E'->MAS T E'|MENOS T E'|EPSILON;T->F T';T'->POR F T';T'->ENTRE F T'|EPSILON;F->P_I E P_D|NUM;"
-analizador.CadenaSigma = input("\nCadena a analizar: ") if op == 1 else cadena
-if op != 1:
-    print("\nCadena a analizar:", cadena, "\n")
+# analizador = AnalizadorLexico("grams")
+# op = 12
+# cadena = "E->T E';E'->MAS T E'|MENOS T E'|EPSILON;T->F T';T'->POR F T';T'->ENTRE F T'|EPSILON;F->P_I E P_D|NUM;"
+# analizador.CadenaSigma = input("\nCadena a analizar: ") if op == 1 else cadena
+# if op != 1:
+#     print("\nCadena a analizar:", cadena, "\n")
 
-gx2 = GramaticasDeGramaticas(analizador)
-if gx2.inieval():
-    anll1 = LL1(gx2)
-    anll1.llenarVnAndVt()
+# gx2 = GramaticasDeGramaticas(analizador)
+# if gx2.inieval():
+#     anll1 = LL1(gx2)
+#     anll1.llenarVnAndVt()
 
-    anll1.asignarTokens(esexpnum=True)
-    anll1.construirTabla()
+#     anll1.asignarTokens(esexpnum=True)
+#     anll1.construirTabla()
 
-    anll1.imprimirTabla()
-else:
-    print("INCORRECTO")
+#     anll1.imprimirTabla()
+# else:
+#     print("INCORRECTO")
