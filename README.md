@@ -16,10 +16,10 @@ Actualmente el proyecto puede realizar la creación de **AFNs** *(Autómatas Fin
 - [ ] [Análisis LL](https://drive.google.com/file/d/1mlB4ACLrKcQ8D-cdlvT9GMHLGt77AhMO/view)
   - [x] [Gramática de gramáticas](https://drive.google.com/file/d/10th--Ndkvnp8YphKhJxvB40Uur5TkTQe/view)
   - [x] Analizadores léxico y sintáctico para gramáticas de gramáticas
-  - [ ] [Operación Firt & Follow](https://drive.google.com/file/d/1CqzPvBLwa9CJU2FDxNhKhc8uVCE3qcv8/view)
-  - [ ] Construcción de la tabla LL(1)
-  - [ ] Analizador léxico para la gramática de entrada
+  - [x] [Operación Firt & Follow](https://drive.google.com/file/d/1CqzPvBLwa9CJU2FDxNhKhc8uVCE3qcv8/view)
+  - [x] Construcción de la tabla LL(1)
+  - [x] Analizador léxico para la gramática de entrada (es enum.txt)
   - [ ] Algoritmo de analisis sintáctico LL(1)
-  - [ ] Tabla LL(1)
+  - [x] Tabla LL(1)
   - [ ] Salida: True ó False
   - (Los analizadores léxicos deberán ser guardados en el directorio *afds/*)
