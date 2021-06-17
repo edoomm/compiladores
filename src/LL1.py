@@ -170,10 +170,13 @@ class LL1(object):
         accion=[]
         pila=[]
         aux=None
-        j=1
         i=1
+        self.tokensAnalizador = []
+        self.analizadorLex.resetattributes()
+
         self.analizadorLex.setCadena(cadena) #Asignamos cadena al analizador
         tokenAux=self.analizadorLex.yylex()  #Asignamos el primer token
+        
         while tokenAux != EPSILON:
             self.tokensAnalizador.append(tokenAux)
             tokenAux=self.analizadorLex.yylex() #Asignacion de los tokens
