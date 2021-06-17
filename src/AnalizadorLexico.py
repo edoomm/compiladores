@@ -47,6 +47,7 @@ class AnalizadorLexico(object):
         self._afn = value
     @property
     def archivo(self):
+    
         """El nombre del archivo de donde se obtuvo la tabla AFD
 
         Returns:
@@ -103,6 +104,9 @@ class AnalizadorLexico(object):
         self.afn.EdosAFN = edosafn
         self.afn.EdosAFN.add(ei)
         self.afn.Alfabeto = alf
+
+    def setCadena(self,cadena):
+        self.CadenaSigma=cadena
 
     def setCadenAndTabla(self,cadena,afd):
         self.CadenaSigma=cadena

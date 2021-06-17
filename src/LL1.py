@@ -10,7 +10,8 @@ class LL1(object):
         self.tabla          = []
         self.cabcol         = []
         self.cabfil         = []
-
+        self.tokensAnalizador=[]
+        self.analizadorLex  = None
     ''' Métodos
     '''
     def llenarVnAndVt(self):
@@ -160,25 +161,96 @@ class LL1(object):
                 print(celda, end='\t')
             print("")
 
+    def llenarAnalizadorLexico(self,nombreArchivo):
+        self.analizadorLex=AnalizadorLexico(nombreArchivo)
+
+
+
+    def analizarCadenaLL1(self,cadena):
+        accion=[]
+        pila=[]
+        aux=None
+        j=1
+        i=1
+        self.analizadorLex.setCadena(cadena) #Asignamos cadena al analizador
+        tokenAux=self.analizadorLex.yylex()  #Asignamos el primer token
+        while tokenAux != EPSILON:
+            self.tokensAnalizador.append(tokenAux)
+            tokenAux=self.analizadorLex.yylex() #Asignacion de los tokens
+
+        print(self.tokensAnalizador)
+        #-------------------
+        self.tokensAnalizador.append("$")
+        pila.insert(0,"$")
+        pila.append(self.listaReglas[0][0])
+
+        while True:
+            for fila in self.tabla:  #iteramos en busqueda de la fila que contiene la  sima de la pila
+                if fila[0]==pila[len(pila)-1]:
+                    #print(fila[0],pila[len(pila)-1])
+                    
+                    for dato in self.tabla[0]: 
+                        
+                        if dato==self.tokensAnalizador[0]:
+                            #print(self.tabla[j][i],pila,dato)
+                            print(pila)
+                            print(self.tokensAnalizador[0],fila[i])
+                            if fila[i]!="pop" and fila[i]!="acept" and  fila[i]!=-1:
+                                print("**")
+                                aux=fila[i][0]
+                                pila.pop()
+                                aux.reverse()
+                                for valor in aux:
+                                    if valor != 'EPSILON':
+                                        pila.append(valor)   
+                                accion.insert(0,fila[i])
+                                i=1
+                            elif fila[i]=="acept":
+                                pila.pop()
+                                self.tokensAnalizador.pop(0)
+                                return True
+                            elif fila[i]=="pop":
+                                pila.pop()
+                                self.tokensAnalizador.pop(0)
+                                accion.insert(0,"pop")
+                                i=1
+                        i+=1     
+                    i=1
+                j+=1            
+            if j>=len(self.tabla):
+                return False           
+
+        
+
+
 #################################################################################################
 #   TEST SECTION                                                                                #
 #################################################################################################
 
-# analizador = AnalizadorLexico("grams")
-# op = 12
-# cadena = "E->T E';E'->MAS T E'|MENOS T E'|EPSILON;T->F T';T'->POR F T';T'->ENTRE F T'|EPSILON;F->P_I E P_D|NUM;"
-# analizador.CadenaSigma = input("\nCadena a analizar: ") if op == 1 else cadena
-# if op != 1:
-#     print("\nCadena a analizar:", cadena, "\n")
+analizador = AnalizadorLexico("grams")
+op = 12
+cadena = "E->T E';E'->MAS T E'|MENOS T E'|EPSILON;T->F T';T'->POR F T';T'->ENTRE F T'|EPSILON;F->P_I E P_D|NUM;"
+analizador.CadenaSigma = input("\nCadena a analizar: ") if op == 1 else cadena
+if op != 1:
+    print("\nCadena a analizar:", cadena, "\n")
 
-# gx2 = GramaticasDeGramaticas(analizador)
-# if gx2.inieval():
-#     anll1 = LL1(gx2)
-#     anll1.llenarVnAndVt()
+gx2 = GramaticasDeGramaticas(analizador)
+if gx2.inieval():
+    anll1 = LL1(gx2)
+    anll1.llenarVnAndVt()
 
-#     anll1.asignarTokens(esexpnum=True)
-#     anll1.construirTabla()
+    anll1.asignarTokens(esexpnum=True)
+    anll1.construirTabla()
 
-#     anll1.imprimirTabla()
-# else:
-#     print("INCORRECTO")
+    anll1.imprimirTabla()
+
+    anll1.llenarAnalizadorLexico("enum")
+    validacion=anll1.analizarCadenaLL1("2.8+7*4")
+
+    if validacion==True:
+        print("La cadena es correcta")
+    else:
+        print("La cadena es incorrecta")
+
+else:
+    print("INCORRECTO")
