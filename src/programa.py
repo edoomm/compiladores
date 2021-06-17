@@ -11,6 +11,8 @@ idsAfds = 0 # Servirá para asignar IDs a los AFDs que vayan siendo creados
 gx2 = None
 anll1 = None
 
+LINEBREAKNUM = 45
+
 def esperar(msj = None):
     """Muestra un mensaje de espera antes de pasar a una acción siguiente
 
@@ -37,7 +39,7 @@ def imprimirmenu():
     """Imprime el menú principal del programa
     """
     linebreak = "\n"
-    for i in range(0, 8):
+    for i in range(0, LINEBREAKNUM):
         linebreak += "\n"
     print(linebreak)
     print("Menú principal")
@@ -155,7 +157,7 @@ def guardarAFD(afd):
     
     return id
 
-def leerarchivo():
+def leerarchivo(file=None):
     """Lee el nombre de un archivo que será el AFD que utilizará el Analizador Léxico
 
     Returns:
@@ -164,7 +166,7 @@ def leerarchivo():
     global analizador
     aux = analizador
     try:
-        aux = AnalizadorLexico(input("Ingrese el nombre del archivo de donde se obtendrá el AFD que el analizador léxico utilizará:\n"))
+        aux = AnalizadorLexico(input("Ingrese el nombre del archivo de donde se obtendrá el AFD que el analizador léxico utilizará:\n") if file == None else file)
     except:
         print("No se pudo crear el analizador léxico correctamente. Intentelo nuevamente o con un archivo diferente")
         return False
@@ -182,7 +184,7 @@ def setanalizador():
         print("Archivo que se está utilizando para analizar cadenas:", analizador.archivo + ".txt")
         newfile = input("Si quiere cambiar a un archivo diferente, escriba el nombre del archivo (Si da ENTER sin teclear nada se seguirá usando el mismo archivo):\n")
         if newfile:
-            if leerarchivo() == False:
+            if leerarchivo(newfile) == False:
                 print("Se usará el archivo", analizador.archivo, "para el analisis")
     return True
 
@@ -201,6 +203,10 @@ def imprimirMenuAfns():
     """Imprime el menú de las operaciones que se pueden realizar con AFNs.
     Corresponde a la entrega del primer parcial
     """
+    linebreak = "\n"
+    for i in range(0, LINEBREAKNUM):
+        linebreak += "\n"
+    print(linebreak)
     print("Menu AFNs")
     print("---------------")
     print("1) Crear AFN básico")
@@ -217,7 +223,7 @@ def imprimirMenuAfns():
     print("12) Eliminar AFN de la lista de AFNs")
     print("13) Eliminar AFD de la lista de AFDs")
     print("14) Exportar AFD")
-    print("\n0) Salir")
+    print("\n0) Regresar")
 
 ## Opción 1
 def crearAfnBasico():
@@ -370,7 +376,7 @@ def eliminarAF(afs=afns):
 def expafd(idafd = None):
     """Exporta un AFD que se haya creado a un archivo txt
     """
-    id = obteneridAFD() if idafd != None else idafd
+    id = obteneridAFD() if idafd == None else idafd
     if id != -1:
         try:
             afds[id].exportarAFD(input("Ingrese el nombre del archivo donde se guardará el AFD: "))
@@ -461,7 +467,7 @@ def imprimirMenuAnSintactico():
     """Imprime el menú correspondiente a los analizadores sintácticos implementados
     """
     linebreak = "\n"
-    for i in range(0, 8):
+    for i in range(0, LINEBREAKNUM):
         linebreak += "\n"
     print(linebreak)
     print("Menú Analizadores sintácticos")
@@ -469,7 +475,7 @@ def imprimirMenuAnSintactico():
     print("1) Evaluar expresión numérica")
     print("2) Convertidor post-fijo")
     print("3) Convertidor de ER a AFN")
-    print("\n0) Salir")
+    print("\n0) Regresar")
 
 def menuansyn(op):
     """Función que sirve para esocger la acción que el usuario desea realizar en el Menu correspondiente a los AFNs
@@ -546,7 +552,7 @@ def imprimirMenuDescRec():
     """Imprime el menu correspondiente al descenso recursivo
     """
     linebreak = "\n"
-    for i in range(0, 8):
+    for i in range(0, LINEBREAKNUM):
         linebreak += "\n"
     print(linebreak)
     print("Menú Descenso Recursivo")
@@ -555,7 +561,7 @@ def imprimirMenuDescRec():
     print("2) Construcción de analizador LL1 (arreglo de reglas y  asignación de tokens")
     print("3) Imprimir Tabla LL(1)")
     print("4) Análisis de una cadena")
-    print("\n0) Salir")
+    print("\n0) Regresar")
 
 def menudescrec(op):
     """Función que sirve para esocger la acción que el usuario desea realizar en el Menu correspondiente a los AFNs
