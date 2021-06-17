@@ -166,8 +166,6 @@ class LL1(object):
     def llenarAnalizadorLexico(self,nombreArchivo):
         self.analizadorLex=AnalizadorLexico(nombreArchivo)
 
-
-
     def analizarCadenaLL1(self,cadena):
         accion=[]
         pila=[]
@@ -184,8 +182,6 @@ class LL1(object):
         self.tokensAnalizador.append("$")
         pila.insert(0,"$")
         pila.append(self.listaReglas[0][0])
-
-        pilaux = pila.copy()
 
         ifila = 0
         while True:
@@ -219,46 +215,5 @@ class LL1(object):
                                 break
                             else:
                                 return False
-                            # ifila += 1
+                                
                         ifila += 1
-            if pilaux == pila:
-                return False
-            pilaux = pila.copy()
-            #     j+=1            
-            # if j>=len(self.tabla):
-            #     return False           
-
-        
-
-
-#################################################################################################
-#   TEST SECTION                                                                                #
-#################################################################################################
-
-analizador = AnalizadorLexico("grams")
-op = 12
-cadena = "E->T E';E'->MAS T E'|MENOS T E'|EPSILON;T->F T';T'->POR F T';T'->ENTRE F T'|EPSILON;F->P_I E P_D|NUM;"
-analizador.CadenaSigma = input("\nCadena a analizar: ") if op == 1 else cadena
-if op != 1:
-    print("\nCadena a analizar:", cadena, "\n")
-
-gx2 = GramaticasDeGramaticas(analizador)
-if gx2.inieval():
-    anll1 = LL1(gx2)
-    anll1.llenarVnAndVt()
-
-    anll1.asignarTokens(esexpnum=True)
-    anll1.construirTabla()
-
-    # anll1.imprimirTabla()
-
-    anll1.llenarAnalizadorLexico("enum")
-    validacion=anll1.analizarCadenaLL1(input("Cadena: "))
-
-    if validacion==True:
-        print("La cadena es correcta")
-    else:
-        print("La cadena es incorrecta")
-
-else:
-    print("INCORRECTO")
