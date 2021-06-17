@@ -569,6 +569,8 @@ def menudescrec(op):
         construccionanll1()
     elif op == 3:
         imprimirtablaLL1()
+    elif op == 4:
+        analizarcadenall1()
     elif op == 0:
         print("Regresando a menu principal(:")
         return False
@@ -602,6 +604,8 @@ def construccionanll1():
     anll1.asignarTokens()
     anll1.construirTabla()
 
+    anll1.analizadorLex = None
+
 def imprimirtablaLL1():
     """Se construye e imprime la tabla LL(1)
     """
@@ -610,6 +614,16 @@ def imprimirtablaLL1():
         return False
     
     anll1.imprimirTabla()
+
+def analizarcadenall1():
+    """Se analiza cadenas a través de la tabla LL(1)
+    """
+    if anll1 == None:
+        print("Aún no se ha construido el analizador LL(1")
+        return False
+    if anll1.analizadorLex == None:
+        anll1.llenarAnalizadorLexico(input("Ingrese el nombre del archivo para la gramática de entrada: "))
+    print("Cadena sintácticamente correcta(:") if anll1.analizarCadenaLL1(input("Ingrese la cadena a analizar: ")) else print("Cadena sintácticamente INCORRECTA")
 
 def menu(op):
     """Función que sirve para esocger la acción que el usuario desea realizar
@@ -638,7 +652,7 @@ def menu(op):
         elif op1 == 2:
             imprimirMenuAnSintactico()
             try:
-                op2 = int(input("Su opción:"))
+                op2 = int(input("Su opción: "))
                 if menuansyn(op2) == False:
                     exited = True
             except:
@@ -646,7 +660,7 @@ def menu(op):
         elif op1 == 3:
             imprimirMenuDescRec()
             try:
-                op2 = int(input("Su opción:"))
+                op2 = int(input("Su opción: "))
                 if menudescrec(op2) == False:
                     exited = True
             except Exception:
