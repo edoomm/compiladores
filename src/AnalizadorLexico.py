@@ -107,7 +107,7 @@ class AnalizadorLexico(object):
 
     def setCadena(self,cadena):
         self.CadenaSigma=cadena
-
+        
     def setCadenAndTabla(self,cadena,afd):
         self.CadenaSigma=cadena
         self.tablaAFD=afd.getTablaAFD()

@@ -106,7 +106,9 @@ class LL1(object):
         self.cabcol = list(self.tokens.values())
         self.cabcol.append("$")
 
-        self.cabfil = list(self.Vn) + self.cabcol
+        noterm = list(self.Vn)
+        noterm.sort()
+        self.cabfil = noterm + self.cabcol
 
         colaux = [''] + self.cabcol
         self.tabla.append(colaux)
@@ -171,7 +173,9 @@ class LL1(object):
         pila=[]
         aux=None
         j=1
-        i=1
+        i=0
+        bandera=0
+        bandera2=0
         self.analizadorLex.setCadena(cadena) #Asignamos cadena al analizador
         tokenAux=self.analizadorLex.yylex()  #Asignamos el primer token
         while tokenAux != EPSILON:
@@ -186,39 +190,59 @@ class LL1(object):
 
         while True:
             for fila in self.tabla:  #iteramos en busqueda de la fila que contiene la  sima de la pila
-                if fila[0]==pila[len(pila)-1]:
+                if fila[0]==pila[len(pila)-1]: #Si fila en 0 es F y esta igual a $ E F
                     #print(fila[0],pila[len(pila)-1])
                     
-                    for dato in self.tabla[0]: 
+                    for celda in self.tabla[0]: #recorres los tokens
                         
-                        if dato==self.tokensAnalizador[0]:
+                        if celda==self.tokensAnalizador[0]: #Si celda es igual a 70
+                            bandera=1
                             #print(self.tabla[j][i],pila,dato)
-                            print(pila)
-                            print(self.tokensAnalizador[0],fila[i])
+                            #print(pila)
+                            #print(self.tokensAnalizador[0],fila[i])
+                            
                             if fila[i]!="pop" and fila[i]!="acept" and  fila[i]!=-1:
-                                print("**")
-                                aux=fila[i][0]
+                                print(pila)
+                                aux = fila[i][0].copy() if isinstance(fila[i][0], list) else fila[i][0]
                                 pila.pop()
                                 aux.reverse()
                                 for valor in aux:
                                     if valor != 'EPSILON':
                                         pila.append(valor)   
                                 accion.insert(0,fila[i])
-                                i=1
+                                i=0
+                                j=0
                             elif fila[i]=="acept":
                                 pila.pop()
                                 self.tokensAnalizador.pop(0)
                                 return True
                             elif fila[i]=="pop":
+                                print("&&")
+                                print(pila)
+                                print(self.tokensAnalizador)
                                 pila.pop()
                                 self.tokensAnalizador.pop(0)
                                 accion.insert(0,"pop")
                                 i=1
-                        i+=1     
-                    i=1
-                j+=1            
-            if j>=len(self.tabla):
-                return False           
+                                j=0
+                            else:
+                                print(celda,i,fila[i],fila)
+                                print("##")
+                                return False
+                        i+=1
+                    if bandera==0:
+                        return False
+                    else:
+                        bandera=0     
+                    i=0 
+                j+=1
+            
+            # if j>=len(self.tabla)-1:
+            #     print("*****")
+            #     return False
+            # else:
+            #     j=0           
+                    
 
         
 
